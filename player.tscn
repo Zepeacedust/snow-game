@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dhtom2qf7sluv"]
+
+[ext_resource type="Texture2D" uid="uid://sycyrb845h6i" path="res://icon.svg" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://dnlnjoimbjcdk" path="res://player_movement.gd" id="1_onrkg"]
+
+[sub_resource type="Curve" id="Curve_onrkg"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.31, 0.79775286), 0.88282484, 0.88282484, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l7ksm"]
+radius = 64.381676
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=487467837]
+script = ExtResource("1_onrkg")
+ACCEL_CURVE = SubResource("Curve_onrkg")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=432349969]
+texture = ExtResource("1_4flbx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1307537146]
+shape = SubResource("CircleShape2D_l7ksm")
