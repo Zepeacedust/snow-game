@@ -1,9 +1,14 @@
 class_name Bridge
 extends Path2D
 
-@export var lead_ticks : int = 5
-@export var control_amount : float = 1
+# number of ticks the end of the bridge is in front of the player
+@export var lead_ticks : int = 30
+# maximum number of ticks that the constructs in one call to extend
+@export var extension_rate : int = 2
 
+
+@export var control_amount : float = 1
+@export var line_visualizer : Line2D
 
 var ghost_speed : float = NAN
 
@@ -15,10 +20,11 @@ func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, d
 		for i in range(from_index, min(curve.point_count, from_index+lead_ticks)):
 			ghost_speed = speed_change(i, ghost_speed, delta)
 	var i = curve.point_count - 1
-	while i-from_index <= lead_ticks:
+	var dest_ticks = min(from_index+lead_ticks, curve.point_count + extension_rate)
+	while i <= dest_ticks:
 		head_direction = (head_direction * ghost_speed + desiredDirection.normalized() * control_amount).normalized()
 		ghost_speed = speed_change(i, ghost_speed, delta)
-		curve.add_point(curve.get_point_position(i) + head_direction*ghost_speed * delta)
+		add_point(curve.get_point_position(i) + head_direction*ghost_speed * delta)
 		i += 1
 
 func direction_from(from_index:int) -> Vector2:
@@ -32,6 +38,9 @@ func speed_change(from_index:int, curr_speed: float, delta:float):
 	var across = next_vec.y * ProjectSettings.get_setting("physics/2d/default_gravity")
 	return curr_speed + across * delta
 
+func add_point(point):
+	self.curve.add_point(point)
+	line_visualizer.add_point(point)
 
 var head_direction : Vector2
 
