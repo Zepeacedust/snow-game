@@ -43,7 +43,8 @@ func bridge_movement(delta: float, desired_direction) -> void:
 	if Input.is_action_just_pressed("jump"):
 		bridge_attatched = null
 		return
-		
+	
+	# Slightly mad on-bridge movement
 	bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
 	position = bridge_attatched.position + bridge_attatched.curve.get_point_position(bridge_index) - determine_foot_loc()
 	velocity = bridge_attatched.direction_from(bridge_index).normalized() * bridge_attatched.speed_change(bridge_index, velocity.length(), delta)
