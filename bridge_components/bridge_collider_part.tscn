@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cbrwvhnf3vb8a"]
+
+[ext_resource type="Script" uid="uid://btj6vix6ksv1o" path="res://scripts/line_collider.gd" id="1_cjfxr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l7ksm"]
+
+[node name="BridgeColliderPart" type="Area2D" unique_id=793903721]
+script = ExtResource("1_cjfxr")
+
+[node name="LineRegion" type="CollisionShape2D" parent="." unique_id=2087302994]
+shape = SubResource("RectangleShape2D_l7ksm")

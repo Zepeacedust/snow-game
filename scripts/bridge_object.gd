@@ -13,6 +13,10 @@ extends Path2D
 @export var minimum_extension_length : float = 2
 @onready var colider : RayCast2D = $RayCast2D
 
+var line_colliders : Array[LineCollider]
+var bridge_collider_object = preload("res://BridgeObject.tscn")
+
+
 var ghost_speed : float = NAN
 
 func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, delta: float):
@@ -46,6 +50,19 @@ func best_extension(target : Vector2) -> Vector2:
 		return to_local(colider.get_collision_point())
 	return target
 
+func extend_colliders(point : Vector2):
+	var last = line_colliders[-1]
+	var runout = last.to_local(self.to_global(point))
+	if abs(runout.y / 2) > last.width:
+		last.extend(runout.x)
+	else:
+		var new_coll : LineCollider = bridge_collider_object.instantiate()
+		add_child(new_coll)
+		new_coll.body_entered.connect(_on_line_collider_body_entered, CONNECT_APPEND_SOURCE_OBJECT)
+		new_coll.set_start(point, curve.point_count -1)
+
+func _on_line_collider_body_entered(body: Node2D, where):
+	print_debug("thing collided", body, where)
 
 func direction_from(from_index:int) -> Vector2:
 	if from_index >= curve.point_count - 1:
@@ -62,6 +79,8 @@ func add_point(point):
 	self.curve.add_point(point)
 	line_visualizer.add_point(point)
 	colider.position = point
+	
+	extend_colliders(point)
 
 var head_direction : Vector2
 
