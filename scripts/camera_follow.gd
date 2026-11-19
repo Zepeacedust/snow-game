@@ -2,8 +2,9 @@ extends Camera2D
 @export var target : PhysicsBody2D
 @export var SPEED : float
 
-@export var LEAD_CURVE : Curve
-@export var ZOOM_CURVE : Curve
+@export var MINIMUM_ZOOM : int = 1
+@export var SCALE_FACTOR : float = 1.5
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -31,9 +32,9 @@ func _process(delta: float) -> void:
 		if relative_offset == 0:
 			zoom = Vector2(1,1)
 			return
-		var scale : float = relative_offset * 1.5
+		var scale : float = relative_offset * SCALE_FACTOR
 		# zoom to keep in the inner 
-		if scale < 1:
-			scale = 1
+		if scale < MINIMUM_ZOOM:
+			scale = MINIMUM_ZOOM
 		
 		zoom = Vector2(1/scale, 1/scale)
