@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://caqhcc35gajyt"]
+
+[ext_resource type="Script" uid="uid://do0qpvw75ypf0" path="res://scripts/bridge_object.gd" id="1_1x2th"]
+
+[sub_resource type="Curve2D" id="Curve2D_1x2th"]
+
+[node name="BridgeObject" type="Path2D" unique_id=977108169]
+curve = SubResource("Curve2D_1x2th")
+script = ExtResource("1_1x2th")
+control_amount = 50.0
