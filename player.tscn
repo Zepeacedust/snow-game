@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://sycyrb845h6i" path="res://icon.svg" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://ddfo501i36jct" path="res://scripts/player_movement.gd" id="1_onrkg"]
+[ext_resource type="Texture2D" uid="uid://b028twghgn7rb" path="res://kenney_particle-pack/PNG (Transparent)/star_06.png" id="3_i3pqv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l7ksm"]
 radius = 65.0
@@ -9,9 +10,25 @@ radius = 65.0
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=487467837]
 script = ExtResource("1_onrkg")
 FOOT_SIZE = 65.0
+meter_depletion = 0.4
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=432349969]
 texture = ExtResource("1_4flbx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1307537146]
 shape = SubResource("CircleShape2D_l7ksm")
+
+[node name="Meter" type="CPUParticles2D" parent="." unique_id=2042225833]
+amount = 32
+texture = ExtResource("3_i3pqv")
+speed_scale = 3.0
+emission_shape = 1
+emission_sphere_radius = 32.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angular_velocity_min = -10.0
+angular_velocity_max = 10.0
+scale_amount_min = 0.0
+scale_amount_max = 0.2
