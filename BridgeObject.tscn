@@ -4,7 +4,10 @@
 
 [sub_resource type="Curve2D" id="Curve2D_1x2th"]
 
-[node name="BridgeObject" type="Path2D" unique_id=977108169]
+[node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizer")]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
 control_amount = 50.0
+line_visualizer = NodePath("Line2D")
+
+[node name="Line2D" type="Line2D" parent="." unique_id=1228438323]

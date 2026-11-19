@@ -28,3 +28,4 @@ metadata/_edit_group_ = true
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1228277987 node_paths=PackedStringArray("target")]
 script = ExtResource("2_d5ghp")
 target = NodePath("../CharacterBody2D")
+SPEED = 5.0

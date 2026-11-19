@@ -1,9 +1,10 @@
 class_name Bridge
 extends Path2D
 
-@export var lead_ticks : int = 5
-@export var control_amount : float = 1
+@export var lead_ticks : int = 30
 
+@export var control_amount : float = 1
+@export var line_visualizer : Line2D
 
 var ghost_speed : float = NAN
 
@@ -18,7 +19,7 @@ func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, d
 	while i-from_index <= lead_ticks:
 		head_direction = (head_direction * ghost_speed + desiredDirection.normalized() * control_amount).normalized()
 		ghost_speed = speed_change(i, ghost_speed, delta)
-		curve.add_point(curve.get_point_position(i) + head_direction*ghost_speed * delta)
+		add_point(curve.get_point_position(i) + head_direction*ghost_speed * delta)
 		i += 1
 
 func direction_from(from_index:int) -> Vector2:
@@ -32,6 +33,9 @@ func speed_change(from_index:int, curr_speed: float, delta:float):
 	var across = next_vec.y * ProjectSettings.get_setting("physics/2d/default_gravity")
 	return curr_speed + across * delta
 
+func add_point(point):
+	self.curve.add_point(point)
+	line_visualizer.add_point(point)
 
 var head_direction : Vector2
 
