@@ -32,12 +32,11 @@ func bridge_movement(delta: float, desired_direction) -> void:
 	if Input.get_action_strength("bridge"):
 		# If not on bridge but making a bridge, push bridge.
 		if bridge_attatched == null:
+			bridge_index = 0
 			bridge_attatched = bridge_obj.instantiate()
 			add_sibling(bridge_attatched)
-			bridge_attatched.position = position + determine_foot_loc()
-			bridge_attatched.curve.add_point(Vector2(0,0))
-			bridge_index=0
-			bridge_attatched.head_direction = velocity.normalized()
+			bridge_attatched.init(position + determine_foot_loc(), velocity.normalized())
+
 			
 		bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
 	if Input.is_action_just_pressed("jump"):
@@ -55,8 +54,6 @@ func bridge_movement(delta: float, desired_direction) -> void:
 		bridge_attatched = null
 		return
 	bridge_index += 1
-
-	print_debug(velocity, bridge_attatched.head_direction, bridge_attatched.ghost_speed)
 
 # Movement when not attatched to the bridge
 func unattatched_movement(delta: float, direction) -> void:

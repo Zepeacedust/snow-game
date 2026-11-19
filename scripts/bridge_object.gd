@@ -13,6 +13,10 @@ extends Path2D
 @export var minimum_extension_length : float = 2
 @onready var colider : RayCast2D = $RayCast2D
 
+var line_colliders : Array[LineCollider]
+var bridge_collider_object = preload("res://bridge_collider_part.tscn")
+
+
 var ghost_speed : float = NAN
 
 func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, delta: float):
@@ -46,6 +50,18 @@ func best_extension(target : Vector2) -> Vector2:
 		return to_local(colider.get_collision_point())
 	return target
 
+func extend_colliders(point : Vector2):
+	var last = line_colliders[line_colliders.size()-1]
+	var runout = last.to_local(self.to_global(point))
+	# If the new point is within the last collider, keep going.
+	if abs(runout.y) < last.width / 2:
+		last.extend(runout)
+	else:
+		# Otherwise make a new collider
+		line_colliders.push_back(make_collider(point))
+
+func _on_line_collider_body_entered(body: Node2D, where):
+	print_debug("thing collided")
 
 func direction_from(from_index:int) -> Vector2:
 	if from_index >= curve.point_count - 1:
@@ -62,9 +78,23 @@ func add_point(point):
 	self.curve.add_point(point)
 	line_visualizer.add_point(point)
 	colider.position = point
+	extend_colliders(point)
 
 var head_direction : Vector2
 
+func make_collider(point: Vector2) ->LineCollider:
+	var new_coll : LineCollider = bridge_collider_object.instantiate()
+	add_child(new_coll)
+	new_coll.body_entered.connect(_on_line_collider_body_entered, CONNECT_APPEND_SOURCE_OBJECT)
+	new_coll.set_start(point, head_direction, curve.point_count -1)
+	return new_coll
+
+func init(_position: Vector2, direction: Vector2):
+	position = _position
+	curve.add_point(Vector2(0,0))
+	head_direction = direction
+	line_colliders = [make_collider(Vector2(0,0))]
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	curve = Curve2D.new()
