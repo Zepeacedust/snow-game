@@ -10,6 +10,9 @@ extends Path2D
 @export var control_amount : float = 1
 @export var line_visualizer : Line2D
 
+@export var minimum_extension_length : float = 2
+@onready var colider : RayCast2D = $RayCast2D
+
 var ghost_speed : float = NAN
 
 func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, delta: float):
@@ -24,8 +27,25 @@ func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, d
 	while i <= dest_ticks:
 		head_direction = (head_direction * ghost_speed + desiredDirection.normalized() * control_amount).normalized()
 		ghost_speed = speed_change(i, ghost_speed, delta)
-		add_point(curve.get_point_position(i) + head_direction*ghost_speed * delta)
+		var target : Vector2 = curve.get_point_position(i) + head_direction*ghost_speed * delta
+		var extension : Vector2 = best_extension(target)
+		
+		# Checks minimum extension length
+		if extension.distance_to(curve.get_point_position(curve.point_count - 1)) < minimum_extension_length:
+			break
+		add_point(best_extension(target))
 		i += 1
+
+# returns the furthest point in the direction of target
+func best_extension(target : Vector2) -> Vector2:
+	var origin : Vector2 = curve.get_point_position(curve.point_count -1)
+	var ray_direction = target - origin
+	colider.target_position = ray_direction
+	colider.force_raycast_update()
+	if colider.is_colliding():
+		return to_local(colider.get_collision_point())
+	return target
+
 
 func direction_from(from_index:int) -> Vector2:
 	if from_index >= curve.point_count - 1:
@@ -41,6 +61,7 @@ func speed_change(from_index:int, curr_speed: float, delta:float):
 func add_point(point):
 	self.curve.add_point(point)
 	line_visualizer.add_point(point)
+	colider.position = point
 
 var head_direction : Vector2
 

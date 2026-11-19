@@ -29,3 +29,4 @@ metadata/_edit_group_ = true
 script = ExtResource("2_d5ghp")
 target = NodePath("../CharacterBody2D")
 SPEED = 5.0
+MINIMUM_ZOOM = 3

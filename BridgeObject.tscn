@@ -34,3 +34,9 @@ texture_mode = 1
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1964331653]
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
