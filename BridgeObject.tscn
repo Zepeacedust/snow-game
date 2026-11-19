@@ -7,3 +7,4 @@
 [node name="BridgeObject" type="Path2D" unique_id=977108169]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
+control_amount = 50.0
