@@ -4,6 +4,9 @@
 
 [sub_resource type="Curve2D" id="Curve2D_1x2th"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fiwvh"]
+size = Vector2(12, 86)
+
 [node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizer")]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
@@ -17,3 +20,9 @@ target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1687747679]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=624764593]
+position = Vector2(0, 43)
+shape = SubResource("RectangleShape2D_fiwvh")
