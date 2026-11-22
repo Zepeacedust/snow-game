@@ -8,7 +8,7 @@ var icicle : PackedScene = preload("res://icicle.tscn")
 @export var extension_rate : int = 2
 
 
-@export var control_amount : float = 1
+@export var control_amount : Curve
 @export var minimum_extension_length : float = 2
 @onready var colider : RayCast2D = $RayCast2D
  
@@ -22,6 +22,7 @@ var ghost_speed : float = NAN
 @onready var icicle_points : Array[Vector2] = []
 
 func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, delta: float):
+	print("speed :", curr_speed)
 	if desiredDirection == Vector2(0,0):
 		desiredDirection = head_direction
 	if is_nan(ghost_speed):
@@ -31,7 +32,7 @@ func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, d
 	var i = curve.point_count - 1
 	var dest_ticks = min(from_index+lead_ticks, curve.point_count + extension_rate)
 	while i <= dest_ticks:
-		head_direction = (head_direction * ghost_speed + desiredDirection.normalized() * control_amount).normalized()
+		head_direction = (head_direction * ghost_speed + desiredDirection.normalized() * control_amount.sample(ghost_speed/1000)).normalized()
 		ghost_speed = speed_change(i, ghost_speed, delta)
 		var target : Vector2 = curve.get_point_position(i) + head_direction*ghost_speed * delta
 		var extension : Vector2 = best_extension(target)

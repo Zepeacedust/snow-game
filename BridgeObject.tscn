@@ -6,6 +6,12 @@
 
 [sub_resource type="Curve2D" id="Curve2D_1x2th"]
 
+[sub_resource type="Curve" id="Curve_av7il"]
+_limits = [0.0, 300.0, 0.0, 10.0]
+_data = [Vector2(0, 0), 0.0, 8.171592, 0, 0, Vector2(3, 150), -2.298251, -2.298251, 0, 0, Vector2(10, 300), 35.690697, 0.0, 0, 0]
+point_count = 3
+metadata/_snap_enabled = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oj7mg"]
 shader = ExtResource("2_gutsx")
 shader_parameter/crack_depth = 3.50000016625
@@ -52,7 +58,8 @@ curve_z = SubResource("Curve_i2ls8")
 [node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizers")]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
-control_amount = 50.0
+control_amount = SubResource("Curve_av7il")
+minimum_extension_length = 5.0
 line_visualizers = [NodePath("Glass"), NodePath("Cracks"), NodePath("Snow")]
 
 [node name="Glass" type="Line2D" parent="." unique_id=1228438323]

@@ -223,6 +223,8 @@ noise = SubResource("FastNoiseLite_t3sok")
 
 [node name="CharacterBody2D" parent="." unique_id=487467837 instance=ExtResource("1_2yr51")]
 position = Vector2(592, 130)
+SPEED = 500.0
+BRIDGE_BOOST = 200.0
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1768566860]
 position = Vector2(509, 361)
