@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bfup5iqqnd7im"]
+
+[ext_resource type="Script" uid="uid://cues48pox3lff" path="res://scripts/icicle.gd" id="1_cvt7c"]
+[ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="1_wjy7e"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qkm8e"]
+shader = ExtResource("1_wjy7e")
+shader_parameter/scale = 50.000002185
+shader_parameter/gap = 4.5
+shader_parameter/angle = 45.0
+shader_parameter/glass_tint = Color(0.49411765, 0.7921569, 1, 0.34901962)
+shader_parameter/stripe_color = Color(1, 1, 1, 0.08)
+shader_parameter/sun_color = Color(1, 1, 1, 0.59)
+shader_parameter/dash_cell = 6.0
+shader_parameter/dash_density = 0.75
+shader_parameter/dash_size = 0.2
+shader_parameter/dashes_enabled = true
+shader_parameter/border_enabled = true
+shader_parameter/border_size = 1.0
+shader_parameter/border_dash_cell = 15.0
+shader_parameter/border_dash_density = 0.5
+shader_parameter/border_dash_size = 1.0
+shader_parameter/border_dashes_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_wjy7e"]
+
+[sub_resource type="Curve" id="Curve_vfffg"]
+_limits = [0.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 402.62173, 0, 0, Vector2(1, 200), 277.59415, 0.0, 0, 0]
+point_count = 2
+
+[node name="Icicle" type="Polygon2D" unique_id=2079121944]
+z_index = -1
+texture_repeat = 2
+material = SubResource("ShaderMaterial_qkm8e")
+texture = SubResource("NoiseTexture2D_wjy7e")
+script = ExtResource("1_cvt7c")
+length_curve = SubResource("Curve_vfffg")

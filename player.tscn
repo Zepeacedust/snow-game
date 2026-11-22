@@ -33,9 +33,12 @@ meter_depletion = 0.4
 shape = SubResource("CircleShape2D_l7ksm")
 
 [node name="Meter" type="CPUParticles2D" parent="." unique_id=2042225833]
-amount = 32
+z_index = 2
+amount = 64
 texture = ExtResource("3_i3pqv")
-speed_scale = 3.0
+speed_scale = 5.0
+randomness = 1.0
+lifetime_randomness = 0.3
 emission_shape = 1
 emission_sphere_radius = 32.0
 spread = 180.0
@@ -46,6 +49,7 @@ angular_velocity_min = -10.0
 angular_velocity_max = 10.0
 scale_amount_min = 0.0
 scale_amount_max = 0.2
+color = Color(6.1466823, 6.1466823, 6.1466823, 1)
 
 [node name="Node2D" type="Node2D" parent="." unique_id=460232876]
 
