@@ -1,13 +1,16 @@
 shader_type canvas_item;
 
-// mipmap is neaded for textureLod
-uniform sampler2D screen_texture: hint_screen_texture, repeat_disable, filter_nearest_mipmap;
-// works better as a normal with warping
-uniform sampler2D warp_texture: repeat_enable;
+// mipmaps are needed for textureLod (blur)
+uniform sampler2D screen_texture: hint_screen_texture, repeat_disable, filter_linear_mipmap;
 
-uniform float intensity: hint_range(0.0, 0.3) = 0.01;
-uniform vec4 tint_color: source_color = vec4(0.0, 0.0, 0.0, 1.0);
+// Frosted glass
+uniform vec4 tint_color: source_color = vec4(0.5, 0.87, 0.945, 1.0);
 uniform float tint_amount: hint_range(0.0, 1.0) = 0.4;
+uniform float frost_scale: hint_range(1.0, 200.0) = 30.0;
+uniform float frost_refraction_px: hint_range(0.0, 30.0) = 4.0;
+uniform float frost_blur_lod: hint_range(0.0, 6.0) = 3.0;
+uniform float frost_whiteness: hint_range(0.0, 0.5) = 0.12;
+uniform float noise_amount: hint_range(0.0, 0.2) = 0.03;
 
 // Crack generation
 uniform float crack_depth : hint_range(0.0, 10.0) = 2.236;
@@ -18,15 +21,13 @@ uniform float crack_profile : hint_range(0.0, 10.0) = 1.0;
 uniform float crack_slope : hint_range(0.0, 50.0) = 45.8;
 uniform float crack_width : hint_range(0.0, 1.0) = 0.001;
 
+uniform float crack_clarity: hint_range(0.0, 1.0) = 0.9;
+uniform float crack_refraction_px: hint_range(0.0, 60.0) = 12.0;
+uniform float crack_edge_light: hint_range(0.0, 3.0) = 0.6;
+uniform float crack_darkness: hint_range(0.0, 1.0) = 0.08;
+
 const vec4 background_color = vec4(0.0, 0.0, 0.0, 0.0);
 const vec4 crack_color = vec4(0.0, 0.0, 0.0, 1.0);
-
-// Glass effect
-uniform vec2 refraction_offset = vec2(25.0,25.0);
-uniform vec2 reflection_offset = vec2(1.0,1.0);
-uniform vec4 reflection_color : source_color = vec4(0.588,0.588,0.588,0.5);
-
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 
 
 
@@ -129,32 +130,37 @@ vec4 generate_cracks(vec2 uv) {
 }
 
 
-void fragment() {	
-	// get our normal warp
-    vec2 warp = texture(warp_texture, UV).xy - 0.5;
-    // sample based on warp and intensity and blur based on intensity
-    vec4 screen = textureLod(screen_texture, UV + warp * intensity, intensity * 4.0);
-    // tint our image
-    screen = mix(screen, tint_color, tint_amount);
-    // get a random-ish value for some speckle noise
-    float noise = fract(sin(dot(UV, vec2(12.9898, 78.233))) * 43758.5453);
-    // light diffusion for glass shape highlights
-    float diff = max(dot(warp, normalize(vec2(1.0, 1.0))), 0.0);
-    // apply diffusion based on intensity
-    screen += diff * intensity;
-    // apply speckle noise based on intensity
-    screen += noise * intensity;
-    // yarp
-    //COLOR = screen;
-	//vec4 ref = texture(screen_texture, vec2(SCREEN_UV.x, 1.0 - SCREEN_UV.y - 0.13));
-	
-	//COLOR =  generate_cracks(UV) + screen + ref/2.0;
-	COLOR =  generate_cracks(UV) + screen;
-	//vec4 orig_color = COLOR;
-	//vec4 adjacent_color = generate_cracks(UV + TEXTURE_PIXEL_SIZE * reflection_offset);
-	//if (adjacent_color.a >= 1.0) {
-		//COLOR = reflection_color;
-	//} else {
-		//COLOR = texture(SCREEN_TEXTURE, SCREEN_UV + COLOR.a*(SCREEN_PIXEL_SIZE * refraction_offset));
-	//}
+void fragment() {
+	float crack = clamp(generate_cracks(UV).a, 0.0, 1.0);
+	// Slope of the crack
+	vec2 crack_grad = vec2(dFdx(crack), dFdy(crack));
+
+	// Whole glass frosted and clear cracks
+	float frost = 1.0 - crack * crack_clarity;
+
+	// Procedural frost warp
+	vec2 frost_uv = UV * frost_scale;
+	vec2 frost_warp = vec2(noise(frost_uv), noise(frost_uv + vec2(17.3, 91.7)));
+
+	// Refract the backdrop, frost scatters while cracks bend
+	vec2 offset_px = frost_warp * frost_refraction_px * frost + crack_grad * crack_refraction_px;
+	vec2 uv = SCREEN_UV + offset_px * SCREEN_PIXEL_SIZE;
+
+	// Blur the backdrop based on frost amount
+	vec3 screen = textureLod(screen_texture, uv, frost_blur_lod * frost).rgb;
+
+	// Tint and whiten our image
+	screen = mix(screen, tint_color.rgb, tint_amount * frost);
+	screen += frost_whiteness * frost;
+
+	// Get a random-ish value for some speckle noise
+	float noise = fract(sin(dot(UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+	// Apply speckle noise based on amount and frost
+	screen += noise * noise_amount * frost;
+
+	// Crack edge lighting and darkening giving some depth
+	screen += crack_edge_light * length(crack_grad);
+	screen *= 1.0 - crack_darkness * crack;
+
+	COLOR = vec4(screen, 1.0);
 }
