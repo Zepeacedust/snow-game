@@ -1,6 +1,7 @@
 class_name Bridge
 extends Path2D
 
+var icicle : PackedScene = preload("res://icicle.tscn")
 # number of ticks the end of the bridge is in front of the player
 @export var lead_ticks : int = 30
 # maximum number of ticks that the constructs in one call to extend
@@ -8,12 +9,17 @@ extends Path2D
 
 
 @export var control_amount : float = 1
-@export var line_visualizer : Line2D
-
 @export var minimum_extension_length : float = 2
 @onready var colider : RayCast2D = $RayCast2D
+ 
+@export_group("Visuals")
+@export var line_visualizers : Array[Line2D]
+@export var points_per_icicle : int = 3
+
 
 var ghost_speed : float = NAN
+@onready var next_icicle : int = points_per_icicle
+@onready var icicle_points : Array[Vector2] = []
 
 func extend_bridge(from_index:int, curr_speed:float, desiredDirection:Vector2, delta: float):
 	if desiredDirection == Vector2(0,0):
@@ -60,7 +66,17 @@ func speed_change(from_index:int, curr_speed: float, delta:float):
 
 func add_point(point):
 	self.curve.add_point(point)
-	line_visualizer.add_point(point)
+	for line in line_visualizers:
+		line.add_point(point)
+	icicle_points.append(point)
+	next_icicle -= 1
+	if next_icicle == 0:
+		var new_icicle : Icicle = icicle.instantiate()
+		new_icicle.bridge_points = icicle_points
+		new_icicle.make_shape()
+		add_child(new_icicle)
+		next_icicle = points_per_icicle
+		icicle_points = [icicle_points.pop_back()]
 	colider.position = point
 
 var head_direction : Vector2

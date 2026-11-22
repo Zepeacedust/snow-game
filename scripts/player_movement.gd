@@ -97,7 +97,7 @@ func _physics_process(delta: float) -> void:
 		meter_particles.lifetime = lerp(.001,2.0,float(current_meter/max_meter)**2)
 		meter_particles.scale_amount_min = lerp(0.0,.2,float(current_meter/max_meter))
 		meter_particles.scale_amount_max = lerp(0.0,.3,float(current_meter/max_meter))
-		meter_particles.emission_sphere_radius = lerp(8.0,32.0,float(current_meter/max_meter))
+		meter_particles.emission_sphere_radius = lerp(16.0,64.0,float(current_meter/max_meter))
 		bridge_movement(delta, direction)
 	else:
 		meter_particles.visible = false

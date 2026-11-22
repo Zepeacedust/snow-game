@@ -1,36 +1,81 @@
 [gd_scene format=3 uid="uid://caqhcc35gajyt"]
 
 [ext_resource type="Script" uid="uid://do0qpvw75ypf0" path="res://scripts/bridge_object.gd" id="1_1x2th"]
+[ext_resource type="Shader" uid="uid://mwj33cwsv18d" path="res://Shaders/IcePath2.gdshader" id="2_gutsx"]
 [ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="2_oj7mg"]
 
 [sub_resource type="Curve2D" id="Curve2D_1x2th"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oj7mg"]
-shader = ExtResource("2_oj7mg")
-shader_parameter/intensity = 0.01
-shader_parameter/tint_color = Color(0.4984898, 0.8680202, 0.9450601, 1)
-shader_parameter/tint_amount = 0.4
-shader_parameter/crack_depth = 2.236
-shader_parameter/crack_scale = 4.0
-shader_parameter/crack_zebra_scale = 2.67
-shader_parameter/crack_zebra_amp = 1.3
-shader_parameter/crack_profile = 1.0
-shader_parameter/crack_slope = 45.8
-shader_parameter/crack_width = 0.001
+shader = ExtResource("2_gutsx")
+shader_parameter/crack_depth = 3.50000016625
+shader_parameter/crack_scale = 1.400000019
+shader_parameter/crack_zebra_scale = 2.50000011875
+shader_parameter/crack_zebra_amp = 2.30000010925
+shader_parameter/crack_profile = 0.450000021375
+shader_parameter/crack_slope = 50.0
+shader_parameter/crack_width = 0.070000003325
 shader_parameter/refraction_offset = Vector2(25, 25)
 shader_parameter/reflection_offset = Vector2(1, 1)
-shader_parameter/reflection_color = Color(0.588, 0.588, 0.588, 0.5)
+shader_parameter/reflection_color = Color(4.415934, 4.415934, 4.415934, 0.12941177)
 
-[node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizer")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7tvu"]
+shader = ExtResource("2_oj7mg")
+shader_parameter/scale = 50.000002185
+shader_parameter/gap = 4.5
+shader_parameter/angle = 45.0
+shader_parameter/glass_tint = Color(0.49411765, 0.7921569, 1, 0.34901962)
+shader_parameter/stripe_color = Color(1, 1, 1, 0.08)
+shader_parameter/sun_color = Color(1, 1, 1, 0.59)
+shader_parameter/dash_cell = 6.0
+shader_parameter/dash_density = 0.75
+shader_parameter/dash_size = 0.2
+shader_parameter/dashes_enabled = true
+shader_parameter/border_enabled = true
+shader_parameter/border_size = 1.0
+shader_parameter/border_dash_cell = 15.0
+shader_parameter/border_dash_density = 0.5
+shader_parameter/border_dash_size = 1.0
+shader_parameter/border_dashes_enabled = true
+
+[sub_resource type="Curve" id="Curve_t3sok"]
+
+[sub_resource type="Curve" id="Curve_mdvpl"]
+
+[sub_resource type="Curve" id="Curve_i2ls8"]
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_pi7eq"]
+curve_x = SubResource("Curve_t3sok")
+curve_y = SubResource("Curve_mdvpl")
+curve_z = SubResource("Curve_i2ls8")
+
+[node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizers")]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
 control_amount = 50.0
-line_visualizer = NodePath("Line2D")
+line_visualizers = [NodePath("Glass"), NodePath("Cracks"), NodePath("Snow")]
 
-[node name="Line2D" type="Line2D" parent="." unique_id=1228438323]
+[node name="Glass" type="Line2D" parent="." unique_id=1228438323]
 material = SubResource("ShaderMaterial_oj7mg")
-width = 16.0
+width = 50.0
 texture_mode = 1
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Cracks" type="Line2D" parent="." unique_id=1442994220]
+material = SubResource("ShaderMaterial_e7tvu")
+width = 50.0
+texture = SubResource("CurveXYZTexture_pi7eq")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Snow" type="Line2D" parent="." unique_id=183710882]
+z_index = -1
+position = Vector2(0, -25)
+width = 20.0
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
