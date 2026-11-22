@@ -24,8 +24,9 @@ shader_parameter/reflection_color = Color(0.588, 0.588, 0.588, 0.5)
 [node name="BridgeObject" type="Path2D" unique_id=977108169 node_paths=PackedStringArray("line_visualizer")]
 curve = SubResource("Curve2D_1x2th")
 script = ExtResource("1_1x2th")
-control_amount = 50.0
+control_amount = 150.0
 line_visualizer = NodePath("Line2D")
+minimum_extension_length = 5.0
 
 [node name="Line2D" type="Line2D" parent="." unique_id=1228438323]
 material = SubResource("ShaderMaterial_oj7mg")

@@ -11,6 +11,7 @@ var bridge_obj = preload("res://BridgeObject.tscn")
 @export var SPEED : float = 300.0
 @export var JUMP_VELOCITY : float = -400.0
 @export var ACCEL_CURVE : Curve
+@export var AIR_PIVOT : Curve
 
 @export_category("Bridge Attributes")
 @export var max_meter : float = 100
@@ -81,7 +82,7 @@ func unattatched_movement(delta: float, direction) -> void:
 	if direction and is_on_floor():
 		velocity.x = direction.x * SPEED
 	elif direction:
-		velocity.x = direction.x * SPEED
+		velocity.x = move_toward(velocity.x, direction.x*SPEED, delta *SPEED*AIR_PIVOT.sample(direction.dot(velocity)) )
 	else: 
 		velocity.x = move_toward(velocity.x, 0, delta * SPEED)
 	
