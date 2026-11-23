@@ -1,3 +1,4 @@
+class_name PlayerMovement
 extends CharacterBody2D
 
 signal start_bridge
