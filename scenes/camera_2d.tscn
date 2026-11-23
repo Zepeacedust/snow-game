@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://onunoh2nkyhv"]
+
+[ext_resource type="Script" uid="uid://bednhsk4epwx5" path="res://scripts/camera_follow.gd" id="1_u0e42"]
+
+[node name="Camera2D" type="Camera2D" unique_id=198332219 node_paths=PackedStringArray("target")]
+texture_filter = 1
+texture_repeat = 2
+script = ExtResource("1_u0e42")
+target = NodePath("")
+SPEED = 5.0
+MINIMUM_ZOOM = 3
