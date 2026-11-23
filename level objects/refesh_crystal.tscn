@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://duuf2cedn0ql0"]
+
+[ext_resource type="Script" uid="uid://cuu3xorj6g6pu" path="res://scripts/crystal.gd" id="1_1msfr"]
+[ext_resource type="Texture2D" uid="uid://bux413ygcpakf" path="res://kenney_particle-pack/PNG (Transparent)/twirl_03.png" id="2_qseqo"]
+[ext_resource type="Texture2D" uid="uid://cyc2kotiu3m2i" path="res://kenney_particle-pack/PNG (Transparent)/twirl_02.png" id="3_0yeki"]
+[ext_resource type="Texture2D" uid="uid://c6tqqvvovjyjo" path="res://kenney_particle-pack/PNG (Transparent)/twirl_01.png" id="4_dl12f"]
+[ext_resource type="Texture2D" uid="uid://ck5ek0x1m8jsm" path="res://kenney_particle-pack/PNG (Transparent)/star_02.png" id="5_hx8md"]
+[ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="6_1qct5"]
+[ext_resource type="Texture2D" uid="uid://bp0gj5qyc2rsv" path="res://kenney_particle-pack/PNG (Transparent)/light_03.png" id="7_vllvj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5l4wb"]
+shader = ExtResource("6_1qct5")
+shader_parameter/scale = 81.2310036684725
+shader_parameter/gap = 4.6850001750375
+shader_parameter/angle = 45.0
+shader_parameter/glass_tint = Color(0.62, 0.79733336, 1, 0.44705883)
+shader_parameter/stripe_color = Color(1, 1, 1, 0.08)
+shader_parameter/sun_color = Color(1, 1, 1, 0.59)
+shader_parameter/dash_cell = 7.7030003183925
+shader_parameter/dash_density = 0.75
+shader_parameter/dash_size = 0.2
+shader_parameter/dashes_enabled = true
+shader_parameter/border_enabled = true
+shader_parameter/border_size = 1.0
+shader_parameter/border_dash_cell = 15.0
+shader_parameter/border_dash_density = 0.5
+shader_parameter/border_dash_size = 1.0
+shader_parameter/border_dashes_enabled = true
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_b6rdv"]
+radius = 88.0
+
+[node name="RefreshCrystal" type="Node2D" unique_id=887414166 node_paths=PackedStringArray("twirls")]
+script = ExtResource("1_1msfr")
+twirls = [NodePath("Twirl01"), NodePath("Twirl02"), NodePath("Twirl03")]
+
+[node name="Twirl03" type="Sprite2D" parent="." unique_id=1369285616]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_qseqo")
+
+[node name="Twirl02" type="Sprite2D" parent="." unique_id=797486094]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_0yeki")
+
+[node name="Twirl01" type="Sprite2D" parent="." unique_id=1914856861]
+position = Vector2(4.7683716e-07, 0)
+scale = Vector2(0.24999999, 0.25)
+texture = ExtResource("4_dl12f")
+
+[node name="Star02" type="Sprite2D" parent="." unique_id=2055604742]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("5_hx8md")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=331879826]
+material = SubResource("ShaderMaterial_5l4wb")
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -96.0
+offset_right = 96.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("7_vllvj")
+expand_mode = 1
+
+[node name="Area2D" type="Area2D" parent="." unique_id=743792068]
+disable_mode = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1949589512]
+shape = SubResource("CircleShape2D_b6rdv")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_shape_entered" from="Area2D" to="." method="_on_area_2d_body_shape_entered"]
