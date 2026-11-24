@@ -53,6 +53,8 @@ uniform sampler2D color_ramp:source_color;
 uniform float steps = 8;
 uniform float edge_size:hint_range(0,1.) = .01;
 uniform float speed = 1;
+uniform float cloud_speed = 0.1;
+
 
 // these dithering and decimate functions were likely pulled from lygia, if I remember correctly. Been floating around in my shader files for a while.
 #define DITHER_BAYER_PRECISION 2
@@ -88,16 +90,25 @@ float get_star(in vec2 uv){
 	return star_flare;
 }
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 void fragment() {
 	// Called for every pixel the material is visible on.
 	// 1. Planning + 2. Cloud up
 	// A cellular noise can make some convincing cloud shapes.
+	//vec2 cloud_uv = UV + vec2(TIME * cloud_speed/speed, 0.);
+	//cloud_uv = 1. - abs(1. - mod(cloud_uv, 2.));
+	//vec3 cloud = texture(clouds, cloud_uv).rgb;
 	vec3 cloud = texture(clouds, UV).rgb;
 	
 	// 3. Dither, 4. Layers
 	// figure out the edges, by first doing a bit of posterization
 	vec3 edges = decimate(cloud+edge_size, steps);
 	cloud = decimate(cloud, steps);
+	
+
 	// mask out an area to dither
 	vec3 dither_area = texture(dither_areas, UV).rgb;
 	float dither_value = ditherBayer(dither_area.r, FRAGCOORD.xy);
@@ -105,8 +116,11 @@ void fragment() {
 	float should_dither = clamp(sign(edges.r-cloud.r),0,1);
 	should_dither *= dither_value;
 	
+	
 	// 5. Rift!
-	vec3 rift = texture(rifts, UV).rgb;
+	vec2 rift_uv = UV - vec2(TIME * cloud_speed, 0.);
+	rift_uv = 1. - abs(1. - mod(rift_uv, 2.));
+	vec3 rift = texture(rifts, rift_uv).rgb;
 	float rift_mask = decimate(rift, 2).r;
 	float rift_edge = step(.5, rift_mask) - rift_mask;
 	rift_mask = step(.6,rift_mask);
@@ -145,6 +159,7 @@ shader_parameter/color_ramp = SubResource("GradientTexture2D_2n73o")
 shader_parameter/steps = 10.18
 shader_parameter/edge_size = 1.0
 shader_parameter/speed = 6.89
+shader_parameter/cloud_speed = 0.01
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_t3sok"]
 
