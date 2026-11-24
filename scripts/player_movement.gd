@@ -25,10 +25,12 @@ var bridge_attatched : Bridge
 var bridge_index : int
 
 @onready var meter_particles : CPUParticles2D = $Meter
+@onready var meter_bar : ProgressBar = $HUD/MeterBar
 @onready var current_meter : float = max_meter
 
 func _ready() -> void:
 	SignalHub.refresh_ice.connect(refresh_ice)
+	meter_bar.max_value = max_meter
 # Find the point where the players foot is supposed to be
 func determine_foot_loc() -> Vector2:
 	var forward = velocity.normalized()
@@ -98,6 +100,9 @@ func unattatched_movement(delta: float, direction) -> void:
 	
 	move_and_slide()
 	current_meter = min(max_meter,current_meter + meter_recharge)
+
+func _process(_delta: float) -> void:
+	meter_bar.value = current_meter
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.

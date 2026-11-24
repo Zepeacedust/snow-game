@@ -25,6 +25,25 @@ _data = {
 &"walk": SubResource("Animation_hqtel")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_meterbg"]
+bg_color = Color(0.1, 0.12, 0.16, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.95, 1, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_meterfill"]
+bg_color = Color(0.6, 0.85, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=487467837]
 script = ExtResource("1_onrkg")
 FOOT_SIZE = 65.0
@@ -86,7 +105,7 @@ things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkel
 
 [node name="Hand2Line" parent="Node2D" unique_id=1400154858 node_paths=PackedStringArray("things") instance=ExtResource("3_hqtel")]
 position = Vector2(-1.142334, -37.486237)
-points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.3601613, 24.034441, -19.857634, 30.48617)
+points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.3601584, 24.034443, -19.857635, 30.48618)
 default_color = Color(0.9647059, 0.52156866, 0.627451, 1)
 things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2/Bone2D")]
 
@@ -120,12 +139,12 @@ bone_angle = 88.421
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm1/Hand1" unique_id=1528585176]
 position = Vector2(-27, 0)
 rotation = 0.24614133
-scale = Vector2(0.9999997, 0.9999997)
+scale = Vector2(0.99999964, 0.99999964)
 rest = Transform2D(1, 0, 0, 1, -27, 0)
 
 [node name="Arm2" type="Bone2D" parent="PlayerSkeleton/Hip/Chest" unique_id=1421831911 node_paths=PackedStringArray("kinematicChain", "kinematicTarget")]
-rotation = 1.3800514
-scale = Vector2(0.99999833, 0.99999833)
+rotation = 1.3800515
+scale = Vector2(0.9999984, 0.9999984)
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 script = ExtResource("4_sweqy")
 kinematicChain = [NodePath("."), NodePath("Hand2"), NodePath("Hand2/Bone2D")]
@@ -133,7 +152,7 @@ kinematicTarget = NodePath("../../../Hand2Target")
 
 [node name="Hand2" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm2" unique_id=1255334076]
 position = Vector2(27, 0)
-rotation = 1.512912
+rotation = 1.5129117
 rest = Transform2D(1, 0, 0, 1, 27, 0)
 auto_calculate_length_and_angle = false
 length = 24.974
@@ -186,13 +205,13 @@ kinematicTarget = NodePath("../../Leg2Target")
 
 [node name="Foot2" type="Bone2D" parent="PlayerSkeleton/Hip/Leg2" unique_id=1958200003]
 position = Vector2(0, 30)
-rotation = 0.8462742
+rotation = 0.84627426
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Leg2/Foot2" unique_id=1842496190]
 position = Vector2(0, 30)
 rotation = -0.12080071
-scale = Vector2(0.99999976, 0.99999976)
+scale = Vector2(0.9999997, 0.9999997)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="Hand1Target" type="Marker2D" parent="PlayerSkeleton" unique_id=366929813]
@@ -209,3 +228,21 @@ position = Vector2(17.381292, 51.873795)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=885558795]
 libraries/ = SubResource("AnimationLibrary_sweqy")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1700000001]
+
+[node name="MeterBar" type="ProgressBar" parent="HUD" unique_id=1700000002]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.9
+anchor_right = 0.5
+anchor_bottom = 0.95
+offset_left = -150.0
+offset_top = -24.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_meterbg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_meterfill")
+value = 100.0
+show_percentage = false
