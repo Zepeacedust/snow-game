@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ckf0m4a171j81"]
+
+[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="1_f7y1q"]
+[ext_resource type="Script" uid="uid://clymawuee50a6" path="res://level objects/collectable.gd" id="2_f7y1q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f7y1q"]
+atlas = ExtResource("1_f7y1q")
+region = Rect2(68, 165, 64, 70)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_b6rdv"]
+radius = 32.0
+
+[node name="Collectable" type="Sprite2D" unique_id=169161764]
+scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_f7y1q")
+region_rect = Rect2(468, 265, 64, 70)
+script = ExtResource("2_f7y1q")
+speed = 0.1
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1752971952]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1177915264]
+shape = SubResource("CircleShape2D_b6rdv")
+
+[connection signal="body_shape_entered" from="Area2D" to="." method="_on_area_2d_body_shape_entered"]

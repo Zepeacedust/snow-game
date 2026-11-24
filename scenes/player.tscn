@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dhtom2qf7sluv"]
 
 [ext_resource type="Script" uid="uid://ddfo501i36jct" path="res://scripts/player_movement.gd" id="1_onrkg"]
+[ext_resource type="Texture2D" uid="uid://caqd0qvcdgi0d" path="res://kenney_particle-pack/PNG (Transparent)/circle_05.png" id="2_qlg0r"]
 [ext_resource type="PackedScene" uid="uid://bnmqrdq5uasna" path="res://player_sprites/player_line.tscn" id="3_hqtel"]
-[ext_resource type="Texture2D" uid="uid://b028twghgn7rb" path="res://kenney_particle-pack/PNG (Transparent)/star_06.png" id="3_i3pqv"]
 [ext_resource type="Texture2D" uid="uid://bp0gj5qyc2rsv" path="res://kenney_particle-pack/PNG (Transparent)/light_03.png" id="4_hqtel"]
 [ext_resource type="Script" uid="uid://bevsddduh0kgh" path="res://scripts/player_kinematics.gd" id="4_sweqy"]
 
@@ -13,6 +13,9 @@ point_count = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l7ksm"]
 radius = 65.0
+
+[sub_resource type="Gradient" id="Gradient_tuyoq"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="Animation" id="Animation_hqtel"]
 resource_name = "walk"
@@ -27,6 +30,7 @@ script = ExtResource("1_onrkg")
 FOOT_SIZE = 65.0
 SPEED = 600.0
 AIR_PIVOT = SubResource("Curve_i3pqv")
+DETATCH_BOOST = 100.0
 meter_depletion = 0.4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1307537146]
@@ -36,7 +40,8 @@ shape = SubResource("CircleShape2D_l7ksm")
 visible = false
 z_index = 2
 amount = 64
-texture = ExtResource("3_i3pqv")
+texture = ExtResource("2_qlg0r")
+lifetime = 1.66
 speed_scale = 5.0
 randomness = 1.0
 lifetime_randomness = 0.3
@@ -50,7 +55,8 @@ angular_velocity_min = -10.0
 angular_velocity_max = 10.0
 scale_amount_min = 0.0
 scale_amount_max = 0.2
-color = Color(6.1466823, 6.1466823, 6.1466823, 1)
+color = Color(1.4954206, 1.4954206, 1.4954206, 1)
+color_ramp = SubResource("Gradient_tuyoq")
 
 [node name="Node2D" type="Node2D" parent="." unique_id=460232876]
 modulate = Color(0.6392157, 0.13725491, 0.25882354, 1)
@@ -74,13 +80,13 @@ things = [NodePath("../../PlayerSkeleton/Hip"), NodePath("../../PlayerSkeleton/H
 
 [node name="Hand1Line" parent="Node2D" unique_id=544836181 node_paths=PackedStringArray("things") instance=ExtResource("3_hqtel")]
 position = Vector2(8, -33)
-points = PackedVector2Array(-7.706345, -6.9989243, -7.706345, -6.9989243, 18.723448, -1.479393, 23.999977, 24.99998)
+points = PackedVector2Array(-7.706345, -6.9989243, -7.706345, -6.9989243, 18.723423, -1.4794006, 23.99995, 24.999949)
 default_color = Color(0.9647059, 0.52156866, 0.627451, 1)
 things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm1"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm1/Hand1"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm1/Hand1/Bone2D")]
 
 [node name="Hand2Line" parent="Node2D" unique_id=1400154858 node_paths=PackedStringArray("things") instance=ExtResource("3_hqtel")]
 position = Vector2(-1.142334, -37.486237)
-points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.360163, 24.03447, -19.857656, 30.486212)
+points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.3601613, 24.034441, -19.857634, 30.48617)
 default_color = Color(0.9647059, 0.52156866, 0.627451, 1)
 things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2/Bone2D")]
 
@@ -96,7 +102,7 @@ rest = Transform2D(1, 0, 0, 1, 0, -40)
 
 [node name="Arm1" type="Bone2D" parent="PlayerSkeleton/Hip/Chest" unique_id=2103436021 node_paths=PackedStringArray("kinematicChain", "kinematicTarget")]
 rotation = -2.9430556
-scale = Vector2(0.99999934, 0.99999934)
+scale = Vector2(0.99999845, 0.99999845)
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 script = ExtResource("4_sweqy")
 kinematicChain = [NodePath("."), NodePath("Hand1"), NodePath("Hand1/Bone2D")]
@@ -104,7 +110,7 @@ kinematicTarget = NodePath("../../../Hand1Target")
 
 [node name="Hand1" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm1" unique_id=1812180619]
 position = Vector2(-27, 0)
-rotation = 1.1682249
+rotation = 1.1682248
 scale = Vector2(0.99999994, 0.99999994)
 rest = Transform2D(1, 0, 0, 1, -27, 0)
 auto_calculate_length_and_angle = false
@@ -114,12 +120,12 @@ bone_angle = 88.421
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm1/Hand1" unique_id=1528585176]
 position = Vector2(-27, 0)
 rotation = 0.24614133
-scale = Vector2(0.99999976, 0.99999976)
+scale = Vector2(0.9999997, 0.9999997)
 rest = Transform2D(1, 0, 0, 1, -27, 0)
 
 [node name="Arm2" type="Bone2D" parent="PlayerSkeleton/Hip/Chest" unique_id=1421831911 node_paths=PackedStringArray("kinematicChain", "kinematicTarget")]
-rotation = 1.3800515
-scale = Vector2(0.99999934, 0.99999934)
+rotation = 1.3800514
+scale = Vector2(0.99999833, 0.99999833)
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 script = ExtResource("4_sweqy")
 kinematicChain = [NodePath("."), NodePath("Hand2"), NodePath("Hand2/Bone2D")]
@@ -127,7 +133,7 @@ kinematicTarget = NodePath("../../../Hand2Target")
 
 [node name="Hand2" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm2" unique_id=1255334076]
 position = Vector2(27, 0)
-rotation = 1.5129117
+rotation = 1.512912
 rest = Transform2D(1, 0, 0, 1, 27, 0)
 auto_calculate_length_and_angle = false
 length = 24.974
@@ -186,7 +192,7 @@ rest = Transform2D(1, 0, 0, 1, 0, 30)
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Leg2/Foot2" unique_id=1842496190]
 position = Vector2(0, 30)
 rotation = -0.12080071
-scale = Vector2(0.9999998, 0.9999998)
+scale = Vector2(0.99999976, 0.99999976)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="Hand1Target" type="Marker2D" parent="PlayerSkeleton" unique_id=366929813]
