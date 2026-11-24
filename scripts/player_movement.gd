@@ -10,6 +10,7 @@ var bridge_obj = preload("res://scenes/BridgeObject.tscn")
 @export var ACCEL_CURVE : Curve
 @export var AIR_PIVOT : Curve
 @export var BRIDGE_BOOST : float
+@export var DETATCH_BOOST : float
 
 @export_category("Bridge Attributes")
 @export var max_meter : float = 100
@@ -61,6 +62,7 @@ func bridge_movement(delta: float, desired_direction) -> void:
 		return
 	if bridge_index >= bridge_attatched.curve.point_count - 1:
 		bridge_attatched = null
+		velocity += velocity.normalized() * DETATCH_BOOST
 		print("detatch")
 		return
 	# Slightly mad on-bridge movement
