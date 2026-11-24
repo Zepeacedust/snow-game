@@ -12,11 +12,13 @@ var bridge_obj = preload("res://BridgeObject.tscn")
 @export var JUMP_VELOCITY : float = -400.0
 @export var ACCEL_CURVE : Curve
 @export var AIR_PIVOT : Curve
+@export var BRIDGE_BOOST : float
 
 @export_category("Bridge Attributes")
 @export var max_meter : float = 100
 @export var meter_recharge : float = 1
 @export var meter_depletion : float = .5
+@export_range(0.0,1.0) var bridge_start_preference : float = .3
 
 
 # object of attatched bridge, or null if not attatched.
@@ -45,11 +47,15 @@ func bridge_movement(delta: float, desired_direction) -> void:
 			bridge_attatched.position = position + determine_foot_loc()
 			bridge_attatched.curve.add_point(Vector2(0,0))
 			bridge_index=0
-			bridge_attatched.head_direction = velocity.normalized()
+			var new_angle : Vector2 = lerp(velocity.normalized(),desired_direction, bridge_start_preference) 
+			velocity += new_angle * BRIDGE_BOOST
+			bridge_attatched.head_direction = new_angle
+			
 			
 		bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
 	if Input.is_action_just_pressed("jump"):
 		bridge_attatched = null
+		velocity.y += JUMP_VELOCITY
 		return
 	if bridge_index >= bridge_attatched.curve.point_count - 1:
 		bridge_attatched = null
@@ -67,7 +73,7 @@ func bridge_movement(delta: float, desired_direction) -> void:
 		return
 	bridge_index += 1
 	current_meter = max(0, current_meter - meter_depletion)
-	print_debug(velocity, bridge_attatched.head_direction, bridge_attatched.ghost_speed)
+	print_debug((velocity.length()), bridge_attatched.head_direction, bridge_attatched.ghost_speed)
 
 # Movement when not attatched to the bridge
 func unattatched_movement(delta: float, direction) -> void:
@@ -76,7 +82,7 @@ func unattatched_movement(delta: float, direction) -> void:
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		velocity.y += JUMP_VELOCITY
 
 
 	if direction and is_on_floor():
