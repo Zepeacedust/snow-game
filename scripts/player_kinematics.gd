@@ -1,4 +1,5 @@
 @tool
+class_name PlayerKinematics
 extends Node2D
 
 @export var kinematicChain : Array[Bone2D]
