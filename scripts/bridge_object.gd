@@ -1,7 +1,7 @@
 class_name Bridge
 extends Path2D
 
-var icicle : PackedScene = preload("res://icicle.tscn")
+var icicle : PackedScene = preload("res://scenes/icicle.tscn")
 # number of ticks the end of the bridge is in front of the player
 @export var lead_ticks : int = 30
 # maximum number of ticks that the constructs in one call to extend

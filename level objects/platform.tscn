@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cfn8aidci05vt"]
+
+[ext_resource type="Texture2D" uid="uid://bey2y2xpmve7w" path="res://new_gradient_texture_2d.tres" id="1_7bnq2"]
+[ext_resource type="Script" uid="uid://cwoa8022pfgq2" path="res://scripts/platform.gd" id="2_n5ny2"]
+
+[node name="Polygon2D" type="Polygon2D" unique_id=336819310 node_paths=PackedStringArray("colision_shape", "visual_layers", "outline")]
+antialiased = true
+texture = ExtResource("1_7bnq2")
+polygon = PackedVector2Array(-32, -672, 864, -672, 2592, 4096, 416, 6528, -1248, 3968)
+uv = PackedVector2Array(376.43765, 123.66194, 477.30728, 123.66194, 671.84155, 660.4325, 426.87247, 934.2215, 239.54312, 646.0226)
+script = ExtResource("2_n5ny2")
+colision_shape = NodePath("StaticBody2D/CollisionPolygon2D")
+visual_layers = [NodePath("Polygon2D")]
+outline = NodePath("Line2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=755992696]
+self_modulate = Color(1, 1, 1, 0.49803922)
+color = Color(0.7882353, 0.87058824, 0.9019608, 0.6745098)
+antialiased = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1460128549]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D" unique_id=1692869528]
+
+[node name="Line2D" type="Line2D" parent="." unique_id=2055903619]
+closed = true
+width = 5.0

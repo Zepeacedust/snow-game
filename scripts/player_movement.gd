@@ -1,10 +1,7 @@
 class_name PlayerMovement
 extends CharacterBody2D
 
-signal start_bridge
-signal end_bridge
-
-var bridge_obj = preload("res://BridgeObject.tscn")
+var bridge_obj = preload("res://scenes/BridgeObject.tscn")
 
 @export var FOOT_SIZE : float = 100
 
@@ -14,6 +11,7 @@ var bridge_obj = preload("res://BridgeObject.tscn")
 @export var ACCEL_CURVE : Curve
 @export var AIR_PIVOT : Curve
 @export var BRIDGE_BOOST : float
+@export var DETATCH_BOOST : float
 
 @export_category("Bridge Attributes")
 @export var max_meter : float = 100
@@ -29,6 +27,9 @@ var bridge_index : int
 
 @onready var meter_particles : CPUParticles2D = $Meter
 @onready var current_meter : float = max_meter
+
+func _ready() -> void:
+	SignalHub.refresh_ice.connect(refresh_ice)
 # Find the point where the players foot is supposed to be
 func determine_foot_loc() -> Vector2:
 	var forward = velocity.normalized()
@@ -36,6 +37,8 @@ func determine_foot_loc() -> Vector2:
 		return Vector2(forward.y, -forward.x) * FOOT_SIZE
 	return Vector2(-forward.y, forward.x) * FOOT_SIZE
 
+func refresh_ice(ammount : float) -> void:
+	current_meter = min(max_meter, current_meter+ammount)
 
 # Handle movement while the player is attatched to the bridge
 func bridge_movement(delta: float, desired_direction) -> void:
@@ -49,7 +52,7 @@ func bridge_movement(delta: float, desired_direction) -> void:
 			bridge_attatched.curve.add_point(Vector2(0,0))
 			bridge_index=0
 			var new_angle : Vector2 = lerp(velocity.normalized(),desired_direction, bridge_start_preference) 
-			velocity += new_angle * BRIDGE_BOOST
+			#velocity += new_angle * BRIDGE_BOOST * (1- abs(new_angle.dot(velocity)))
 			bridge_attatched.head_direction = new_angle
 			
 			
@@ -60,6 +63,7 @@ func bridge_movement(delta: float, desired_direction) -> void:
 		return
 	if bridge_index >= bridge_attatched.curve.point_count - 1:
 		bridge_attatched = null
+		velocity += velocity.normalized() * DETATCH_BOOST
 		print("detatch")
 		return
 	# Slightly mad on-bridge movement
@@ -87,7 +91,7 @@ func unattatched_movement(delta: float, direction) -> void:
 
 
 	if direction and is_on_floor():
-		velocity.x = direction.x * SPEED
+		velocity.x =move_toward(velocity.x, direction.x*SPEED, delta*SPEED*5)
 	elif direction:
 		velocity.x = move_toward(velocity.x, direction.x*SPEED, delta *SPEED*AIR_PIVOT.sample(direction.dot(velocity)) )
 	else: 
