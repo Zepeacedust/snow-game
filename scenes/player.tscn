@@ -127,7 +127,7 @@ _data = {
 &"walk": SubResource("Animation_hqtel")
 }
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=487467837]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=487467837 groups=["PlayerStart"]]
 script = ExtResource("1_onrkg")
 FOOT_SIZE = 65.0
 SPEED = 600.0
@@ -188,7 +188,7 @@ things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkel
 
 [node name="Hand2Line" parent="Node2D" unique_id=1400154858 node_paths=PackedStringArray("things") instance=ExtResource("3_hqtel")]
 position = Vector2(-1.142334, -37.486237)
-points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.3601613, 24.034441, -19.857634, 30.48617)
+points = PackedVector2Array(1.4359888, -2.5126877, 1.4359888, -2.5126877, 6.3601584, 24.034443, -19.857635, 30.48618)
 default_color = Color(0.9647059, 0.52156866, 0.627451, 1)
 things = [NodePath("../../PlayerSkeleton/Hip/Chest"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2"), NodePath("../../PlayerSkeleton/Hip/Chest/Arm2/Hand2/Bone2D")]
 
@@ -222,7 +222,7 @@ bone_angle = 88.421
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Chest/Arm1/Hand1" unique_id=1528585176]
 position = Vector2(-32, 0)
 rotation = 0.24614133
-scale = Vector2(0.9999997, 0.9999997)
+scale = Vector2(0.99999964, 0.99999964)
 rest = Transform2D(1, 0, 0, 1, -27, 0)
 
 [node name="Arm2" type="Bone2D" parent="PlayerSkeleton/Hip/Chest" unique_id=1421831911 node_paths=PackedStringArray("kinematicChain", "kinematicTarget")]
@@ -297,7 +297,7 @@ rest = Transform2D(1, 0, 0, 1, 0, 30)
 [node name="Bone2D" type="Bone2D" parent="PlayerSkeleton/Hip/Leg2/Foot2" unique_id=1842496190]
 position = Vector2(0, 38)
 rotation = -0.12080071
-scale = Vector2(0.99999976, 0.99999976)
+scale = Vector2(0.9999997, 0.9999997)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=885558795]

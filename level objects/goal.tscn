@@ -28,7 +28,7 @@ offsets = PackedFloat32Array(0, 0.9)
 colors = PackedColorArray(0.9647059, 0.52156866, 0.627451, 1, 0.8117647, 0.89411765, 0.92941177, 1)
 metadata/_snap_enabled = true
 
-[node name="Goal" type="Node2D" unique_id=1904425614]
+[node name="Goal" type="Node2D" unique_id=1904425614 groups=["Goal"]]
 modulate = Color(1.0845727, 1.0845727, 1.0845727, 1)
 script = ExtResource("1_iuy8m")
 
