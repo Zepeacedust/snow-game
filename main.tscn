@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cepl21dfqeujg"]
+
+[ext_resource type="PackedScene" uid="uid://bkipg1hkuls7b" path="res://main_menu.tscn" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cbumrip3x380f" path="res://level_select.tscn" id="2_h2yge"]
+
+[node name="Node2D" type="Node2D" unique_id=601457610]
+
+[node name="Main Menu" parent="." unique_id=6589661 instance=ExtResource("1_0xm2m")]
+
+[node name="Level Select" parent="." unique_id=146264912 instance=ExtResource("2_h2yge")]
+visible = false

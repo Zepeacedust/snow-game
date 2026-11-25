@@ -8,5 +8,8 @@ signal refresh_ice(ammount : float)
 signal goal_reached
 
 signal reset_level
-signal level_select_screen
 signal select_level(level : PackedScene)
+
+signal level_select_screen
+signal credits_screen
+signal main_menu

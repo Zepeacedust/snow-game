@@ -12,6 +12,7 @@ signal level_completed(collected : Array[int])
 
 var start_position : Vector2 = Vector2.ZERO
 func _ready() -> void:
+	SignalHub.level_select_screen.connect(close_level)
 	start_position = $CharacterBody2D.position
 	load_level()
 
