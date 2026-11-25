@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://bkipg1hkuls7b"]
 
+[ext_resource type="Script" uid="uid://d3v5vfw21yovq" path="res://main_menu.gd" id="1_0k4wn"]
 [ext_resource type="Shader" uid="uid://p2jys4cdtgwb" path="res://Shaders/Snow.gdshader" id="1_nlkkf"]
 [ext_resource type="Texture2D" uid="uid://cwhgv3unxdcp6" path="res://Shaders/background noise/cloud_noise.tres" id="2_qe12f"]
 [ext_resource type="Texture2D" uid="uid://b8siv5e2u7wjg" path="res://Shaders/background noise/dither_noise.tres" id="3_8qtwp"]
 [ext_resource type="Texture2D" uid="uid://cd7pija4lesvq" path="res://Shaders/background noise/rift_noise.tres" id="4_dy7ct"]
 [ext_resource type="Texture2D" uid="uid://h6meig4770p8" path="res://Shaders/background noise/star_cell_noise.tres" id="5_0o4t1"]
 [ext_resource type="Texture2D" uid="uid://3fjnov116rct" path="res://Shaders/background noise/star_noise.tres" id="6_0k4wn"]
+[ext_resource type="FontFile" uid="uid://befujplfmh24" path="res://Shaders/TrueType (.ttf)/Kaph-Italic.ttf" id="7_0o4t1"]
+[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="7_dy7ct"]
+[ext_resource type="Texture2D" uid="uid://du7lauir4ku3a" path="res://snowflakes.tres" id="8_0o4t1"]
+[ext_resource type="FontFile" uid="uid://bpt2goji6ffp1" path="res://Starwhisper-v2.008/Starwhisper-Regular-v2.008.ttf" id="8_dy7ct"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_okqkh"]
 shader = ExtResource("1_nlkkf")
@@ -153,7 +158,16 @@ noise = SubResource("FastNoiseLite_t3sok")
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b6rdv"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_0k4wn"]
+atlas = ExtResource("7_dy7ct")
+region = Rect2(269, 365, 62, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5v2v"]
+atlas = ExtResource("7_dy7ct")
+region = Rect2(669, 165, 62, 70)
+
 [node name="Main Menu" type="Node2D" unique_id=6589661]
+script = ExtResource("1_0k4wn")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=994522193]
 layer = -6
@@ -191,3 +205,59 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = SubResource("NoiseTexture2D_b6rdv")
+
+[node name="ExitButton" type="Button" parent="." unique_id=1240208035]
+offset_left = 256.0
+offset_top = 512.0
+offset_right = 896.0
+offset_bottom = 608.0
+theme_override_colors/icon_normal_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+theme_override_fonts/font = ExtResource("7_0o4t1")
+theme_override_font_sizes/font_size = 48
+text = "Exit"
+icon = SubResource("AtlasTexture_0k4wn")
+flat = true
+expand_icon = true
+
+[node name="CreditsButton" type="Button" parent="." unique_id=547210833]
+offset_left = 256.0
+offset_top = 384.0
+offset_right = 896.0
+offset_bottom = 480.0
+theme_override_colors/icon_normal_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+theme_override_fonts/font = ExtResource("7_0o4t1")
+theme_override_font_sizes/font_size = 48
+text = "Credits"
+icon = SubResource("AtlasTexture_j5v2v")
+flat = true
+expand_icon = true
+
+[node name="LevelsButton" type="Button" parent="." unique_id=52275159]
+offset_left = 256.0
+offset_top = 256.0
+offset_right = 896.0
+offset_bottom = 352.0
+theme_override_colors/icon_normal_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7_0o4t1")
+theme_override_font_sizes/font_size = 48
+text = "Level Select"
+icon = ExtResource("8_0o4t1")
+flat = true
+expand_icon = true
+
+[node name="Label" type="Label" parent="." unique_id=695367537]
+offset_left = 256.0
+offset_top = -96.0
+offset_right = 896.0
+offset_bottom = 368.0
+theme_override_colors/font_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+theme_override_colors/font_shadow_color = Color(0.29803923, 0.0627451, 0.21176471, 1)
+theme_override_colors/font_outline_color = Color(0.44313726, 0.6627451, 0.96862745, 0.99607843)
+theme_override_fonts/font = ExtResource("8_dy7ct")
+theme_override_font_sizes/font_size = 200
+text = "RIME"
+
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="LevelsButton" to="." method="_on_levels_button_pressed"]
