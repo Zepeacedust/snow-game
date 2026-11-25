@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://8vpunu6twyfw"]
+
+[node name="Control" type="Control" unique_id=796076342]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1387259559]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1252118730]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
