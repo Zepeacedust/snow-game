@@ -30,6 +30,7 @@ var bridge_index : int
 
 func _ready() -> void:
 	SignalHub.refresh_ice.connect(refresh_ice)
+	SignalHub.modify_bridge_meter.connect(modify_bridge_meter)
 	meter_bar.max_value = max_meter
 # Find the point where the players foot is supposed to be
 func determine_foot_loc() -> Vector2:
@@ -41,12 +42,20 @@ func determine_foot_loc() -> Vector2:
 func refresh_ice(ammount : float) -> void:
 	current_meter = min(max_meter, current_meter+ammount)
 
+func modify_bridge_meter(meter: float, recharge: float) -> void:
+	current_meter = meter
+	meter_recharge = recharge
+
+func get_bridge_meter_info() -> Vector3:
+	return Vector3(current_meter, meter_recharge, meter_depletion)
+
 # Handle movement while the player is attatched to the bridge
 func bridge_movement(delta: float, desired_direction) -> void:
 	var cur_speed = velocity.length()
+	var is_bridge_attatched = bridge_attatched != null
 	if Input.get_action_strength("bridge"):
 		# If not on bridge but making a bridge, push bridge.
-		if bridge_attatched == null and current_meter > 0:
+		if !is_bridge_attatched and current_meter > 0:
 			bridge_attatched = bridge_obj.instantiate()
 			add_sibling(bridge_attatched)
 			bridge_attatched.position = position + determine_foot_loc()
@@ -57,29 +66,31 @@ func bridge_movement(delta: float, desired_direction) -> void:
 			bridge_attatched.head_direction = new_angle
 			
 			
-		bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
-	if Input.is_action_just_pressed("jump"):
-		bridge_attatched = null
-		velocity.y += JUMP_VELOCITY
-		return
-	if bridge_index >= bridge_attatched.curve.point_count - 1:
-		bridge_attatched = null
-		velocity += velocity.normalized() * DETATCH_BOOST
-		print("detatch")
-		return
-	# Slightly mad on-bridge movement
-	if current_meter > 0 :
-		bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
-	position = bridge_attatched.position + bridge_attatched.curve.get_point_position(bridge_index) - determine_foot_loc()
-	velocity = bridge_attatched.direction_from(bridge_index).normalized() * bridge_attatched.speed_change(bridge_index, velocity.length(), delta)
-	meter_particles.position = to_local(bridge_attatched.to_global(bridge_attatched.curve.get_point_position(bridge_attatched.curve.point_count - 2)))
-	move_and_slide()
-	if get_last_slide_collision() != null:
-		bridge_attatched = null
-		return
-	bridge_index += 1
-	current_meter = max(0, current_meter - meter_depletion)
-	print_debug((velocity.length()), bridge_attatched.head_direction, bridge_attatched.ghost_speed)
+		if is_bridge_attatched:
+			bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
+	if is_bridge_attatched:
+		if Input.is_action_just_pressed("jump"):
+			bridge_attatched = null
+			velocity.y += JUMP_VELOCITY
+			return
+		if bridge_index >= bridge_attatched.curve.point_count - 1:
+			bridge_attatched = null
+			velocity += velocity.normalized() * DETATCH_BOOST
+			print("detatch")
+			return
+		# Slightly mad on-bridge movement
+		if current_meter > 0 :
+			bridge_attatched.extend_bridge(bridge_index, cur_speed, desired_direction, delta)
+		position = bridge_attatched.position + bridge_attatched.curve.get_point_position(bridge_index) - determine_foot_loc()
+		velocity = bridge_attatched.direction_from(bridge_index).normalized() * bridge_attatched.speed_change(bridge_index, velocity.length(), delta)
+		meter_particles.position = to_local(bridge_attatched.to_global(bridge_attatched.curve.get_point_position(bridge_attatched.curve.point_count - 2)))
+		move_and_slide()
+		if get_last_slide_collision() != null:
+			bridge_attatched = null
+			return
+		bridge_index += 1
+		current_meter = max(0, current_meter - meter_depletion)
+		print_debug((velocity.length()), bridge_attatched.head_direction, bridge_attatched.ghost_speed)
 
 # Movement when not attatched to the bridge
 func unattatched_movement(delta: float, direction) -> void:

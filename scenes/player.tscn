@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bnmqrdq5uasna" path="res://player_sprites/player_line.tscn" id="3_hqtel"]
 [ext_resource type="Texture2D" uid="uid://bp0gj5qyc2rsv" path="res://kenney_particle-pack/PNG (Transparent)/light_03.png" id="4_hqtel"]
 [ext_resource type="Script" uid="uid://bevsddduh0kgh" path="res://scripts/player_kinematics.gd" id="4_sweqy"]
+[ext_resource type="Script" uid="uid://ctisga1hkos8a" path="res://scenes/meter_bar.gd" id="6_tuyoq"]
 
 [sub_resource type="Curve" id="Curve_i3pqv"]
 _limits = [1.0, 5.0, -1.0, 1.0]
@@ -246,3 +247,4 @@ theme_override_styles/background = SubResource("StyleBoxFlat_meterbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_meterfill")
 value = 100.0
 show_percentage = false
+script = ExtResource("6_tuyoq")

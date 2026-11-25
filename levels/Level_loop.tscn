@@ -1,15 +1,15 @@
-[gd_scene format=3 uid="uid://cwqq34luprs2t"]
+[gd_scene format=3 uid="uid://b34y00ftadgm"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_snunk"]
-[ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_0578r"]
-[ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_73igt"]
-[ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="4_i45pl"]
-[ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="5_55gux"]
-[ext_resource type="PackedScene" uid="uid://bnhy4urh4ncg5" path="res://level objects/goal.tscn" id="6_uk0fh"]
-[ext_resource type="Texture2D" uid="uid://du7lauir4ku3a" path="res://snowflakes.tres" id="7_ly5rw"]
-[ext_resource type="PackedScene" uid="uid://ckf0m4a171j81" path="res://level objects/collectable.tscn" id="8_lr1hp"]
-[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="9_8i26r"]
-[ext_resource type="PackedScene" uid="uid://duuf2cedn0ql0" path="res://level objects/refesh_crystal.tscn" id="10_0578r"]
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_ntk7j"]
+[ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_s3adc"]
+[ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_5csv1"]
+[ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="4_v7v4i"]
+[ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="5_di74q"]
+[ext_resource type="PackedScene" uid="uid://bnhy4urh4ncg5" path="res://level objects/goal.tscn" id="6_1ojv0"]
+[ext_resource type="Texture2D" uid="uid://du7lauir4ku3a" path="res://snowflakes.tres" id="7_ouop1"]
+[ext_resource type="PackedScene" uid="uid://ckf0m4a171j81" path="res://level objects/collectable.tscn" id="8_vcfht"]
+[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="9_mt801"]
+[ext_resource type="PackedScene" uid="uid://duuf2cedn0ql0" path="res://level objects/refesh_crystal.tscn" id="10_4ev13"]
 
 [sub_resource type="Shader" id="Shader_4n8tn"]
 code = "shader_type canvas_item;
@@ -219,69 +219,63 @@ shader_parameter/crack_edge_light = 0.0
 shader_parameter/crack_darkness = 0.7130000338675
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
-atlas = ExtResource("9_8i26r")
+atlas = ExtResource("9_mt801")
 region = Rect2(69, 365, 62, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ly3hx"]
-atlas = ExtResource("9_8i26r")
+atlas = ExtResource("9_mt801")
 region = Rect2(68, 165, 64, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkb0e"]
-atlas = ExtResource("9_8i26r")
+atlas = ExtResource("9_mt801")
 region = Rect2(569, 265, 62, 70)
 
 [node name="TestLevel" type="Node2D" unique_id=1669989023]
-script = ExtResource("1_snunk")
+script = ExtResource("1_ntk7j")
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
 material = SubResource("ShaderMaterial_1xymn")
 
-[node name="Polygon2D7" parent="Platforms" unique_id=336819310 instance=ExtResource("2_0578r")]
-position = Vector2(4549, 805)
-color = Color(0.6666667, 0.73333335, 0.8039216, 1)
-polygon = PackedVector2Array(109, 83, 370, 271, 354, 597, 55, 724, -208, 538, -178, 195)
-uv = PackedVector2Array(432.45532, 287.87436, 585.3268, 287.87436, 809.1743, 566.31885, 645.3834, 653.67395, 394.23746, 642.7545, 301.42264, 473.504)
-
-[node name="Polygon2D" parent="Platforms" unique_id=864268895 instance=ExtResource("2_0578r")]
+[node name="Polygon2D" parent="Platforms" unique_id=336819310 instance=ExtResource("2_s3adc")]
 position = Vector2(-256, 800)
-polygon = PackedVector2Array(52, -674, 573.1252, -672.7163, 1296, 515, 2992, 1293, 3959, 1009, 4883, 1425, 5962, 938, 8183, 988, 7780, 3501, 1957, 3466, 456, 1329)
+polygon = PackedVector2Array(52, -674, 573.1252, -672.7163, 1507, 281, 3388, 2715, 4325, 3101, 4909, 3413, 5298, 3843, 6818, 5028, 7016, 5358, 6757.827, 5147.456, 1957, 3466, 456, 1329)
 uv = PackedVector2Array(743.99994, 8, 832.00006, 152, 570.4386, 906.4701, 7.969567, 989.0524, 70.97986, 460.8987)
 
-[node name="Polygon2D2" parent="Platforms" unique_id=160589985 instance=ExtResource("2_0578r")]
-position = Vector2(3065, -6445)
+[node name="Polygon2D2" parent="Platforms" unique_id=160589985 instance=ExtResource("2_s3adc")]
+position = Vector2(1941, -4639)
 color = Color(0.2627451, 0.47843137, 0.5647059, 1)
-polygon = PackedVector2Array(4515, 5757, 4504, 7758, 2666, 7759, 2218, 7254, 1559, 6864, 1003, 7119, 740, 7808, 553, 7100, -205, 6766, -917, 7073, -940, 7866, -1390, 5724)
+polygon = PackedVector2Array(448, 32, 1696, 2080, 3683, 6833, 2105, 6381, 1344, 6691, 1014, 7189, -134, 5725, -635, 3794)
 uv = PackedVector2Array(678.9678, 41.337006, 696.80774, 393.4259, 219.83655, 878.61487, 420.38913, 350.62112)
 
-[node name="Polygon2D4" parent="Platforms" unique_id=773163945 instance=ExtResource("2_0578r")]
-position = Vector2(9882, 1403)
+[node name="Polygon2D4" parent="Platforms" unique_id=773163945 instance=ExtResource("2_s3adc")]
+position = Vector2(5350, 1881)
 color = Color(0, 0.58431375, 0.63529414, 1)
-polygon = PackedVector2Array(-212, 241, 2745, 2482, -171, 1786)
+polygon = PackedVector2Array(-212, 241, 1312, 1472, 1069, 2583, 1242, 3002, -171, 1786)
 uv = PackedVector2Array(526.7771, 292.28296, 595.7082, 474.45804, 393.83853, 725.5642, 339.67834, 523.6945)
 
-[node name="Polygon2D5" parent="Platforms" unique_id=835824249 instance=ExtResource("2_0578r")]
-position = Vector2(2725, 786)
+[node name="Polygon2D5" parent="Platforms" unique_id=835824249 instance=ExtResource("2_s3adc")]
+position = Vector2(3968, 2399)
 color = Color(0.6666667, 0.73333335, 0.8039216, 1)
-polygon = PackedVector2Array(109, 83, 370, 271, 354, 597, 55, 724, -208, 538, -178, 195)
+polygon = PackedVector2Array(109, 83, 370, 271, 354, 597, 55, 724, -277, 574, -178, 195)
 uv = PackedVector2Array(432.45532, 287.87436, 585.3268, 287.87436, 809.1743, 566.31885, 645.3834, 653.67395, 394.23746, 642.7545, 301.42264, 473.504)
 
-[node name="Polygon2D6" parent="Platforms" unique_id=2032729782 instance=ExtResource("2_0578r")]
-position = Vector2(13069, -2562)
+[node name="Polygon2D6" parent="Platforms" unique_id=2032729782 instance=ExtResource("2_s3adc")]
+position = Vector2(9177, 2266)
 color = Color(0.2627451, 0.47843137, 0.5647059, 1)
-polygon = PackedVector2Array(766, 5661, 1055, 7586, -1785, 5437, -1419, 5009, -291.65698, 5001.226, -125, 4675, -166, 3979, -3399, 4032, -3298, 2636, 115, 3210)
+polygon = PackedVector2Array(766, 5661, 1055, 7586, -1785, 5437, -1419, 5009, -291.65698, 5001.226, -125, 4675, -166, 3979, -2584, 2608, 115, 3210)
 uv = PackedVector2Array(678.9678, 41.337006, 696.80774, 393.4259, 219.83655, 878.61487, 420.38913, 350.62112)
 
-[node name="Background" parent="." unique_id=994522193 instance=ExtResource("3_73igt")]
+[node name="Background" parent="." unique_id=994522193 instance=ExtResource("3_5csv1")]
 
-[node name="Camera2D" parent="." unique_id=198332219 node_paths=PackedStringArray("target") instance=ExtResource("4_i45pl")]
+[node name="Camera2D" parent="." unique_id=198332219 node_paths=PackedStringArray("target") instance=ExtResource("4_v7v4i")]
 target = NodePath("../CharacterBody2D")
 SCALE_FACTOR = 3.0
 
-[node name="CharacterBody2D" parent="." unique_id=487467837 instance=ExtResource("5_55gux")]
+[node name="CharacterBody2D" parent="." unique_id=487467837 instance=ExtResource("5_di74q")]
 position = Vector2(96, 64)
 
-[node name="Goal" parent="." unique_id=1904425614 instance=ExtResource("6_uk0fh")]
-position = Vector2(12265, 2423)
+[node name="Goal" parent="." unique_id=1904425614 instance=ExtResource("6_1ojv0")]
+position = Vector2(8435, 7281)
 
 [node name="Timer" type="Timer" parent="." unique_id=282463720]
 
@@ -291,37 +285,34 @@ position = Vector2(12265, 2423)
 modulate = Color(0, 0, 0, 1)
 position = Vector2(640, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("7_ly5rw")
+texture = ExtResource("7_ouop1")
 
 [node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(704, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("7_ly5rw")
+texture = ExtResource("7_ouop1")
 
 [node name="Sprite2D3" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1237023390]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(576, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("7_ly5rw")
+texture = ExtResource("7_ouop1")
 
-[node name="Collectable2" parent="." unique_id=676469921 node_paths=PackedStringArray("holder") instance=ExtResource("8_lr1hp")]
-position = Vector2(4318, 815)
+[node name="Collectable2" parent="." unique_id=676469921 node_paths=PackedStringArray("holder") instance=ExtResource("8_vcfht")]
+position = Vector2(4076, 2023)
 texture = SubResource("AtlasTexture_4n8tn")
 holder = NodePath("../SnowflakeDisplay/Sprite2D")
 
-[node name="Collectable" parent="." unique_id=169161764 node_paths=PackedStringArray("holder") instance=ExtResource("8_lr1hp")]
-position = Vector2(8749, 1473)
+[node name="Collectable" parent="." unique_id=169161764 node_paths=PackedStringArray("holder") instance=ExtResource("8_vcfht")]
+position = Vector2(5168, 4588)
 texture = SubResource("AtlasTexture_ly3hx")
 holder = NodePath("../SnowflakeDisplay/Sprite2D2")
 
-[node name="Collectable3" parent="." unique_id=25041559 node_paths=PackedStringArray("holder") instance=ExtResource("8_lr1hp")]
-position = Vector2(2436, 816)
+[node name="Collectable3" parent="." unique_id=25041559 node_paths=PackedStringArray("holder") instance=ExtResource("8_vcfht")]
+position = Vector2(7111, 6846)
 texture = SubResource("AtlasTexture_wkb0e")
 holder = NodePath("../SnowflakeDisplay/Sprite2D3")
 
-[node name="RefreshCrystal2" parent="." unique_id=887414166 instance=ExtResource("10_0578r")]
-position = Vector2(3312, 1623)
-
-[node name="RefreshCrystal" parent="." unique_id=1323940294 instance=ExtResource("10_0578r")]
-position = Vector2(5184, 1339)
+[node name="RefreshCrystal" parent="." unique_id=887414166 instance=ExtResource("10_4ev13")]
+position = Vector2(4077, 2021)
