@@ -54,7 +54,7 @@ class LegDirector:
 		if not redirect:
 			move_elapsed = 0
 			move_start = destination
-		move_duration = change.length() / 600
+		move_duration = change.length() / 1200
 		if move_duration == 0:
 			move_duration = 0.01
 		move_height = change.length()
@@ -75,7 +75,7 @@ class LegDirector:
 	func need_retarget() -> bool:
 		if state == LegState.AIRBORNE:
 			return true
-		if (destination - parent.global_position).length() > 90:
+		if (destination - parent.global_position).length() > 110:
 			return true
 		 #retarget if both targets are on the same side of velocity
 		if sign((parent.velocity + Vector2(0,500)).angle_to(relative_direction())) == sign((parent.velocity + Vector2(0,980)).angle_to(other.relative_direction())):
@@ -96,7 +96,7 @@ class LegDirector:
 		var space_state = parent.get_world_2d().direct_space_state	
 		
 		var scanline = get_scanline()
-		var start_point = parent.global_position + 0.3 * Vector2(parent.velocity.x, 0)
+		var start_point = parent.global_position + 0.25 * Vector2(parent.velocity.x, 0)
 		start_point.x += other.relative_direction().x
 		var query = PhysicsRayQueryParameters2D.create(start_point, start_point + scanline)
 		query.exclude = [parent]
@@ -146,11 +146,11 @@ func _process(delta: float) -> void:
 		hip.rotation = player.determine_foot_loc().angle() - PI/2
 
 		leg1.position = Vector2(00,40).rotated(hip.rotation)
-		leg2.position = Vector2(20,40).rotated(hip.rotation)
+		leg2.position = Vector2(sign(player.velocity.x) * 20,40).rotated(hip.rotation)
 		
 		leg1_director.destination = leg1.global_position
 		leg2_director.destination = leg2.global_position
 		
-		hand1.position = Vector2(30,-10).rotated(hip.rotation)
-		hand2.position = Vector2(30,-15).rotated(hip.rotation)
-		hip.rotation += clamp(sqrt(player.velocity.length())/40, 0, PI/3)
+		hand1.position = Vector2(sign(player.velocity.x) * 30,-10).rotated(hip.rotation)
+		hand2.position = Vector2(sign(player.velocity.x) * 30,-15).rotated(hip.rotation)
+		hip.rotation += sign(player.velocity.x) * clamp(sqrt(player.velocity.length())/40, 0, PI/3)
