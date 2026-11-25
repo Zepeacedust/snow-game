@@ -46,6 +46,8 @@ func refresh_ice(ammount : float) -> void:
 func modify_bridge_meter(meter: float, recharge: float) -> void:
 	current_meter = meter
 	meter_recharge = recharge
+	if meter <= 0:
+		bridge_attatched = null
 
 func get_bridge_meter_info() -> Vector3:
 	return Vector3(current_meter, meter_recharge, meter_depletion)
