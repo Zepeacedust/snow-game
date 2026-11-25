@@ -1,11 +1,31 @@
 [gd_scene format=3 uid="uid://dm7lf3kp6nunh"]
 
+[ext_resource type="Shader" uid="uid://d36yuakc4vihg" path="res://shaders/no_bridge_zone.gdshader" id="1_0kys2"]
 [ext_resource type="Script" uid="uid://efqph218vmof" path="res://level objects/no_bridge_zone.gd" id="1_li7ac"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5csv1"]
+shader = ExtResource("1_0kys2")
+shader_parameter/sway_speed = 0.65800002799512
+shader_parameter/sway_strength = 0.002000000095
+shader_parameter/noise_scale = 12.8070005608325
+shader_parameter/time_offset = 45.3490021540775
+shader_parameter/flame_count = 22.10000095475
+shader_parameter/flame_height = 0.26500001119047
+shader_parameter/heat_tint = 0.5270000250325
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sv0y4"]
 
 [node name="NoBridgeZone" type="Node2D" unique_id=588157472]
+scale = Vector2(50, 50)
 script = ExtResource("1_li7ac")
+
+[node name="Visual" type="ColorRect" parent="." unique_id=501776256]
+material = SubResource("ShaderMaterial_5csv1")
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+mouse_filter = 2
 
 [node name="Area2D" type="Area2D" parent="." unique_id=501776255]
 disable_mode = 2
