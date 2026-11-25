@@ -19,3 +19,6 @@ signal select_level(level : PackedScene)
 signal level_select_screen
 signal credits_screen
 signal main_menu
+
+
+var audio : AudioStreamPlayer2D
