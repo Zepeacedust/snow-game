@@ -32,19 +32,19 @@ shader_parameter/border_dashes_enabled = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("10_bnu5t")
-region = Rect2(69, 365, 62, 70)
+region = Rect2(569, 365, 62, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ly3hx"]
 atlas = ExtResource("10_bnu5t")
-region = Rect2(68, 165, 64, 70)
+region = Rect2(266, 465, 68, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkb0e"]
 atlas = ExtResource("10_bnu5t")
-region = Rect2(569, 265, 62, 70)
+region = Rect2(165, 165, 70, 70)
 
 [node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_4ckw4")
-level_name = "Test Level"
+level_name = "Crystal Madness"
 collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
@@ -305,6 +305,12 @@ position = Vector2(704, 40)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("8_dapib")
 
+[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1016110944]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(440, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("8_dapib")
+
 [node name="Sprite2D3" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1237023390]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(576, 40)
@@ -319,7 +325,7 @@ holder = NodePath("../SnowflakeDisplay/Sprite2D")
 [node name="Collectable" parent="." unique_id=169161764 node_paths=PackedStringArray("holder") instance=ExtResource("9_yr45m")]
 position = Vector2(11520, 2816)
 texture = SubResource("AtlasTexture_ly3hx")
-holder = NodePath("../SnowflakeDisplay/Sprite2D")
+holder = NodePath("../SnowflakeDisplay/Sprite2D2")
 
 [node name="Collectable3" parent="." unique_id=25041559 node_paths=PackedStringArray("holder") instance=ExtResource("9_yr45m")]
 position = Vector2(58112, 7424)
