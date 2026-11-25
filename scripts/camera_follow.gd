@@ -12,7 +12,7 @@ enum CameraMode {
 }
 
 @onready var goal =  get_tree().get_first_node_in_group("Goal").global_position
-@onready var start =  get_tree().get_first_node_in_group("PlayerStart").global_position
+@onready var start =  get_tree().get_first_node_in_group("PlayerStart")
 
 @export var camera_mode : CameraMode = CameraMode.FOLLOWING
 
@@ -87,7 +87,7 @@ func goal_into(timer : float):
 		print_debug("goal_into_timer", goal)
 		return
 	global_position = lerp(autodirect_start, goal,1- clamp(autodirect_timer / goal_into_time, 0, 1))
-	zoom = lerp(autodirect_start_scale, Vector2(1,1) * SCALE_FACTOR, 1-clamp(autodirect_timer / goal_into_time, 0, 1))
+	zoom = lerp(autodirect_start_scale, Vector2(1,1) / max(SCALE_FACTOR, MINIMUM_ZOOM), 1-clamp(autodirect_timer / goal_into_time, 0, 1))
 	
 
 func goal_wait(timer: float):
@@ -104,8 +104,8 @@ func player_into(timer : float):
 		autodirect_state = AutoDirectState.PLAYER_WAIT
 		print_debug("player_into_timer", start)
 		return
-	global_position = lerp(autodirect_start, start, 1- clamp(autodirect_timer / player_into_time, 0, 1))
-	zoom = lerp(autodirect_start_scale, Vector2(1,1) * SCALE_FACTOR, 1- clamp(autodirect_timer / goal_into_time, 0, 1))
+	global_position = lerp(autodirect_start, start.global_position, 1- clamp(autodirect_timer / player_into_time, 0, 1))
+	zoom = lerp(autodirect_start_scale, Vector2(1,1) / max(SCALE_FACTOR, MINIMUM_ZOOM), 1- clamp(autodirect_timer / goal_into_time, 0, 1))
 	
 
 
@@ -115,6 +115,9 @@ func player_wait(timer: float):
 
 
 func autodirect_mode(delta):
+	if Input.is_anything_pressed():
+		camera_mode = CameraMode.FOLLOWING
+		return
 	autodirect_timer -= delta
 	match autodirect_state:
 		AutoDirectState.WIDE_SHOT_WAIT:
