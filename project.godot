@@ -31,6 +31,10 @@ project/assembly_name="SnowGame"
 [gui]
 
 theme/default_font_multichannel_signed_distance_field=true
+[global_group]
+
+Goal=""
+PlayerStart=""
 
 [input]
 

@@ -1,25 +1,19 @@
 class_name Level extends Node2D
 
-var level_clear_screen : PackedScene = preload("res://level_clear_screen.tscn")
-
 @export var level_name : String
+
 @export var collectables : Array[Sprite2D]
 
-var time : float = 0.0
+signal level_completed(collected : Array[int])
 
-func _ready() -> void:
-	SignalHub.goal_reached.connect(goal_reached)
-	# TODO : Start zoomed out, zoom into goal, move to player
+func load_level() -> void:
+	SignalHub.goal_reached.connect(on_level_complete)
 
+func unload_level() -> void:
+	SignalHub.goal_reached.disconnect(on_level_complete)
 
-func _process(delta: float) -> void:
-	# TODO : Make it so time doesn't start until first input
-	time += delta
-	
-
-
-func goal_reached() -> void:
-	# TODO : Add zoom out to see level 
-	var clear_screen : LevelClearScreen = level_clear_screen.instantiate()
-	clear_screen.update_clear_info(level_name, collectables, snappedf(time,.1))
-	$SnowflakeDisplay.add_child(clear_screen)
+func on_level_complete() -> void:
+	var collected : Array[int] = []
+	for flake in collectables:
+		collected.append(int(flake.collected))
+	level_completed.emit(collected)
