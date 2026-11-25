@@ -186,19 +186,19 @@ shader_parameter/glitter_color = Color(0.85, 0.95, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("9_3rl7q")
-region = Rect2(69, 365, 62, 70)
+region = Rect2(167, 365, 66, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ly3hx"]
 atlas = ExtResource("9_3rl7q")
-region = Rect2(68, 165, 64, 70)
+region = Rect2(168, 265, 64, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkb0e"]
 atlas = ExtResource("9_3rl7q")
-region = Rect2(569, 265, 62, 70)
+region = Rect2(566, 65, 68, 70)
 
 [node name="TestLevel2" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_w7skq")
-level_name = "Dipping"
+level_name = "Begining"
 collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
