@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://ja5xr0e1i16h" path="res://levels/Spikes.tscn" id="14_vebhf"]
 [ext_resource type="PackedScene" uid="uid://dwhedfesskae5" path="res://levels/Tunneling.tscn" id="15_473rj"]
 [ext_resource type="PackedScene" uid="uid://bmolvxrywukky" path="res://levels/CrystalMadness.tscn" id="16_ehng5"]
+[ext_resource type="PackedScene" uid="uid://djxqjs1xwwrly" path="res://levels/SimpleBridge.tscn" id="17_p532j"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_okqkh"]
 shader = ExtResource("4_8qr5y")
@@ -326,3 +327,4 @@ offset_right = 956.0
 offset_bottom = 236.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
+level_scene = ExtResource("17_p532j")
