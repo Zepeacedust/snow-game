@@ -38,7 +38,7 @@ func on_level_complete() -> void:
 	$SnowflakeDisplay.add_child(clear_screen)
 
 func close_level() -> void:
-	
+	#get_tree().get_nodes_in_group("aduio")[0].reparent(get_parent())
 	queue_free()
 
 func reset_self() -> void:

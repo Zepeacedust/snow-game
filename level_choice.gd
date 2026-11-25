@@ -14,7 +14,7 @@ func _ready() -> void:
 	for i in range(3):
 		flake_boxes[i].texture = level.collectables[i].texture
 	update_info()
-	level.queue_free()
+	level.close_level()
 	
 func update_info() -> void:
 	var flake_boxes = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer.get_children()

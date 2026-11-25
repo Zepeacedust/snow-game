@@ -18,6 +18,8 @@ enum CameraMode {
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#if len(get_tree().get_nodes_in_group("Aduio")) > 0:
+		#get_tree().get_nodes_in_group("Aduio")[0].reparent(self)
 	autodirect_timer = wide_time
 	# Start at the destination no matter what the haters say
 	if target and camera_mode == CameraMode.FOLLOWING:

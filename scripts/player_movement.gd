@@ -33,6 +33,7 @@ func _ready() -> void:
 	SignalHub.refresh_ice.connect(refresh_ice)
 	SignalHub.modify_bridge_meter.connect(modify_bridge_meter)
 	meter_bar.max_value = max_meter
+	
 # Find the point where the players foot is supposed to be
 func determine_foot_loc() -> Vector2:
 	var forward = velocity.normalized()
