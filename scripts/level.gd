@@ -6,18 +6,18 @@ var level_complete_screen : PackedScene = preload("res://level_clear_screen.tscn
 
 @export var collectables : Array[Sprite2D]
 
-
+var camera : Camera2D
 var time : float = 0.0
 signal level_completed(collected : Array[int])
 
 var start_position : Vector2 = Vector2.ZERO
 func _ready() -> void:
+	camera = $Camera2D
 	SignalHub.level_select_screen.connect(close_level)
 	start_position = $CharacterBody2D.position
 	load_level()
 
 func load_level() -> void:
-	print("yay")
 	SignalHub.goal_reached.connect(on_level_complete)
 	SignalHub.reset_level.connect(reset_self)
 
@@ -28,7 +28,6 @@ func unload_level() -> void:
 	SignalHub.goal_reached.disconnect(on_level_complete)
 
 func on_level_complete() -> void:
-	print("now")
 	var collected : Array[int] = []
 	for flake in collectables:
 		collected.append(int(flake.collected))
@@ -38,7 +37,6 @@ func on_level_complete() -> void:
 	$SnowflakeDisplay.add_child(clear_screen)
 
 func close_level() -> void:
-	#get_tree().get_nodes_in_group("aduio")[0].reparent(get_parent())
 	queue_free()
 
 func reset_self() -> void:
@@ -48,6 +46,6 @@ func reset_self() -> void:
 	$CharacterBody2D.position = start_position
 	time = 0.0
 
-#func _unhandled_input(event: InputEvent) -> void:
-	#if event.is_action_pressed("restart"):
-		#reset_self()
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("restart"):
+		reset_self()
