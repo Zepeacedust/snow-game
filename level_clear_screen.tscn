@@ -139,3 +139,6 @@ theme = ExtResource("1_2nyxq")
 theme_override_font_sizes/font_size = 20
 text = "Level Select"
 flat = true
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/LevelsButton" to="." method="_on_levels_button_pressed"]

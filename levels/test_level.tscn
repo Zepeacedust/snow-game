@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://scripts/level.gd" id="1_e7anx"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="1_o6mel"]
-[ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="2_4n8tn"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="2_e7anx"]
 [ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="3_ur00s"]
 [ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="4_wndkh"]
@@ -197,9 +196,9 @@ region = Rect2(68, 165, 64, 70)
 atlas = ExtResource("8_wndkh")
 region = Rect2(569, 265, 62, 70)
 
-[node name="TestLevel2" type="Node2D" unique_id=1669989023]
+[node name="TestLevel2" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_e7anx")
-level_name = "Test Level"
+level_name = "Dipping"
 collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
@@ -246,19 +245,19 @@ position = Vector2(5376, 576)
 
 [node name="Sprite2D" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1219358869]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(640, 40)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("9_ly3hx")
-
-[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(704, 40)
+position = Vector2(696, 40)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("9_ly3hx")
 
 [node name="Sprite2D3" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1237023390]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(576, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("9_ly3hx")
+
+[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1361472054]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(480, 39.999996)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("9_ly3hx")
 

@@ -137,3 +137,4 @@ func _process(delta: float) -> void:
 		follow_mode(delta)
 	if camera_mode == CameraMode.AUTODIRECT:
 		autodirect_mode(delta)
+	SignalHub.audio.position = position

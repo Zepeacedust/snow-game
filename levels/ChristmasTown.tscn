@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://baoo08hm5rahr"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_wytxc"]
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://scripts/level.gd" id="1_wytxc"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_5q7kp"]
 [ext_resource type="PackedScene" uid="uid://duuf2cedn0ql0" path="res://level objects/refesh_crystal.tscn" id="3_5q7kp"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_gw5v2"]
@@ -197,8 +197,10 @@ region = Rect2(68, 165, 64, 70)
 atlas = ExtResource("9_kraum")
 region = Rect2(569, 265, 62, 70)
 
-[node name="TestLevel" type="Node2D" unique_id=1669989023]
+[node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_wytxc")
+level_name = "Christmas"
+collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
 material = SubResource("ShaderMaterial_1xymn")

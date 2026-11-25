@@ -1,66 +1,328 @@
 [gd_scene format=3 uid="uid://cbumrip3x380f"]
 
-[ext_resource type="Script" uid="uid://521ym1aiy843" path="res://level_choice.gd" id="1_vomi7"]
-[ext_resource type="Texture2D" uid="uid://sycyrb845h6i" path="res://icon.svg" id="2_wevku"]
+[ext_resource type="Script" uid="uid://caakcr8d60k1x" path="res://level_select.gd" id="1_wevku"]
+[ext_resource type="PackedScene" uid="uid://ild467uuqjq0" path="res://level_choice.tscn" id="2_apu6u"]
+[ext_resource type="Shader" uid="uid://p2jys4cdtgwb" path="res://Shaders/Snow.gdshader" id="4_8qr5y"]
+[ext_resource type="FontFile" uid="uid://by13xxpl8r7p0" path="res://Shaders/TrueType (.ttf)/Kaph-Regular.ttf" id="4_bv7n5"]
+[ext_resource type="Texture2D" uid="uid://cwhgv3unxdcp6" path="res://Shaders/background noise/cloud_noise.tres" id="5_05pd3"]
+[ext_resource type="Texture2D" uid="uid://b8siv5e2u7wjg" path="res://Shaders/background noise/dither_noise.tres" id="6_hhsoe"]
+[ext_resource type="Texture2D" uid="uid://cd7pija4lesvq" path="res://Shaders/background noise/rift_noise.tres" id="7_rtb5x"]
+[ext_resource type="Texture2D" uid="uid://h6meig4770p8" path="res://Shaders/background noise/star_cell_noise.tres" id="8_vnx2f"]
+[ext_resource type="Texture2D" uid="uid://3fjnov116rct" path="res://Shaders/background noise/star_noise.tres" id="9_7pkux"]
+[ext_resource type="PackedScene" uid="uid://baoo08hm5rahr" path="res://levels/ChristmasTown.tscn" id="10_851in"]
+[ext_resource type="PackedScene" uid="uid://dbec5tddqnpyr" path="res://levels/Free Fall.tscn" id="11_ehng5"]
+[ext_resource type="PackedScene" uid="uid://b34y00ftadgm" path="res://levels/Level_loop.tscn" id="12_p532j"]
+[ext_resource type="PackedScene" uid="uid://cwqq34luprs2t" path="res://levels/Level_loop_twice.tscn" id="13_doruf"]
+[ext_resource type="PackedScene" uid="uid://ja5xr0e1i16h" path="res://levels/Spikes.tscn" id="14_vebhf"]
+[ext_resource type="PackedScene" uid="uid://dwhedfesskae5" path="res://levels/Tunneling.tscn" id="15_473rj"]
+[ext_resource type="PackedScene" uid="uid://bmolvxrywukky" path="res://levels/CrystalMadness.tscn" id="16_ehng5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b6rdv"]
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_okqkh"]
+shader = ExtResource("4_8qr5y")
+shader_parameter/spread = 0.5
+shader_parameter/size = 0.74000003445148
+shader_parameter/snow_color = Color(2.137626, 2.137626, 2.137626, 1)
+shader_parameter/snow_transparency = 0.2
+shader_parameter/speed = 0.10000000475
+shader_parameter/wind = 0.0
+shader_parameter/num_of_layers = 10
+
+[sub_resource type="Gradient" id="Gradient_oj7mg"]
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lh6rn"]
+noise_type = 2
+frequency = 0.0063
+fractal_type = 3
+fractal_octaves = 2
+fractal_lacunarity = 1.72
+fractal_weighted_strength = 0.54
+fractal_ping_pong_strength = 2.145
+cellular_distance_function = 1
+cellular_jitter = 1.655
+cellular_return_type = 0
+domain_warp_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_trhe4"]
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_lh6rn")
+color_ramp = SubResource("Gradient_oj7mg")
+seamless = true
+normalize = false
+seamless_blend_skirt = 1.0
+
+[sub_resource type="Shader" id="Shader_t3sok"]
+code = "
+shader_type canvas_item;
+uniform sampler2D clouds:source_color;
+uniform sampler2D dither_areas:source_color;
+uniform sampler2D rifts:source_color;
+uniform sampler2D stars:source_color;
+uniform sampler2D star_cells:source_color;
+uniform sampler2D color_ramp:source_color;
+uniform float steps = 8;
+uniform float edge_size:hint_range(0,1.) = .01;
+uniform float speed = 1;
+
+// these dithering and decimate functions were likely pulled from lygia, if I remember correctly. Been floating around in my shader files for a while.
+#define DITHER_BAYER_PRECISION 2
+vec3 decimate(vec3 v, float p){ return floor(v*p)/p; }
+float ditherBayer(const in vec2 xy) {
+    float kern[64];
+    kern[ 0] = 0.000; kern[ 1] = 0.500; kern[ 2] = 0.124; kern[ 3] = 0.624; kern[ 4] = 0.028; kern[ 5] = 0.532; kern[ 6] = 0.156; kern[ 7] = 0.656;
+    kern[ 8] = 0.752; kern[ 9] = 0.248; kern[10] = 0.876; kern[11] = 0.376; kern[12] = 0.784; kern[13] = 0.280; kern[14] = 0.908; kern[15] = 0.404;
+    kern[16] = 0.188; kern[17] = 0.688; kern[18] = 0.060; kern[19] = 0.564; kern[20] = 0.216; kern[21] = 0.720; kern[22] = 0.092; kern[23] = 0.596;
+    kern[24] = 0.940; kern[25] = 0.436; kern[26] = 0.812; kern[27] = 0.312; kern[28] = 0.972; kern[29] = 0.468; kern[30] = 0.844; kern[31] = 0.344;
+    kern[32] = 0.044; kern[33] = 0.548; kern[34] = 0.172; kern[35] = 0.672; kern[36] = 0.012; kern[37] = 0.516; kern[38] = 0.140; kern[39] = 0.640;
+    kern[40] = 0.800; kern[41] = 0.296; kern[42] = 0.924; kern[43] = 0.420; kern[44] = 0.768; kern[45] = 0.264; kern[46] = 0.892; kern[47] = 0.392;
+    kern[48] = 0.232; kern[49] = 0.736; kern[50] = 0.108; kern[51] = 0.608; kern[52] = 0.200; kern[53] = 0.704; kern[54] = 0.076; kern[55] = 0.580;
+    kern[56] = 0.988; kern[57] = 0.484; kern[58] = 0.860; kern[59] = 0.360; kern[60] = 0.956; kern[61] = 0.452; kern[62] = 0.828; kern[63] = 0.328;
+    int index = int(mod(xy.x, 8.0)) + (int(mod(xy.y, 8.0)) * 8);
+    return kern[index];
+}
+vec3 ditherBayer(vec3 color, const in vec2 xy, const int pres) {
+    float d = float(pres);
+    vec3 decimated = decimate(color, d);
+    vec3 diff = (color - decimated) * d;
+    vec3 ditherPattern = vec3(ditherBayer(xy));
+    return decimate(color + (step(ditherPattern, diff) / d), d);
+}
+float ditherBayer(const in float val, const in vec2 xy) { return ditherBayer(vec3(val), xy, DITHER_BAYER_PRECISION).r; }
+
+float get_star(in vec2 uv){
+
+	float star_flare = texture(stars, uv).r;
+	float star_cell = texture(star_cells, uv).r;
+	star_flare = star_flare * clamp(sin((TIME/10.+star_cell*PI*2.))*100.-99., star_cell*.005, 1);
+
+	return star_flare;
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+	// 1. Planning + 2. Cloud up
+	// A cellular noise can make some convincing cloud shapes.
+	vec3 cloud = texture(clouds, UV).rgb;
+	
+	// 3. Dither, 4. Layers
+	// figure out the edges, by first doing a bit of posterization
+	vec3 edges = decimate(cloud+edge_size, steps);
+	cloud = decimate(cloud, steps);
+	// mask out an area to dither
+	vec3 dither_area = texture(dither_areas, UV).rgb;
+	float dither_value = ditherBayer(dither_area.r, FRAGCOORD.xy);
+	// multiply the dither area with the edges,
+	float should_dither = clamp(sign(edges.r-cloud.r),0,1);
+	should_dither *= dither_value;
+	
+	// 5. Rift!
+	vec3 rift = texture(rifts, UV).rgb;
+	float rift_mask = decimate(rift, 2).r;
+	float rift_edge = step(.5, rift_mask) - rift_mask;
+	rift_mask = step(.6,rift_mask);
+	cloud.r = max(0, cloud.r-rift_mask);
+	cloud.r = mix(cloud.r, cloud.r * 3., rift_edge);
+	// Apply the dithering to our cloud effect!
+	cloud = mix(cloud, vec3(cloud.r+1./steps), should_dither);
+	float star = get_star(UV);
+	cloud = mix(texture(color_ramp, vec2(cloud.r, 0)).rgb, vec3(1.), smoothstep(.5,1., star));
+	
+	COLOR.rgb = cloud.rgb;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_t3sok"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.22222222, 0.5555556, 0.7777778, 1)
+colors = PackedColorArray(0.6117647, 0.65882355, 0.8117647, 1, 0.78039217, 0.8509804, 0.9137255, 1, 0.87058824, 0.9098039, 0.9529412, 1, 0.8509804, 0.8627451, 0.9254902, 1, 0.96862745, 0.9647059, 0.98039216, 1)
+metadata/_snap_enabled = true
+metadata/_snap_count = 9
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_851in"]
+gradient = SubResource("Gradient_t3sok")
+fill_from = Vector2(0.2, 0.1)
+fill_to = Vector2(0.90000004, 0.3)
+metadata/_snap_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ehng5"]
+shader = SubResource("Shader_t3sok")
+shader_parameter/clouds = ExtResource("5_05pd3")
+shader_parameter/dither_areas = ExtResource("6_hhsoe")
+shader_parameter/rifts = ExtResource("7_rtb5x")
+shader_parameter/stars = ExtResource("9_7pkux")
+shader_parameter/star_cells = ExtResource("8_vnx2f")
+shader_parameter/color_ramp = SubResource("GradientTexture2D_851in")
+shader_parameter/steps = 10.18
+shader_parameter/edge_size = 1.0
+shader_parameter/speed = 6.89
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_t3sok"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lh6rn"]
+noise = SubResource("FastNoiseLite_t3sok")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b6rdv"]
 
 [node name="Level Select" type="Node2D" unique_id=146264912]
+script = ExtResource("1_wevku")
 
-[node name="Level Choice" type="Node2D" parent="." unique_id=1003569617]
-script = ExtResource("1_vomi7")
+[node name="Node2D" type="Node2D" parent="." unique_id=160673039]
+position = Vector2(0, 648)
+rotation = -1.5707964
 
-[node name="Button" type="Button" parent="Level Choice" unique_id=140234661]
-offset_right = 64.0
-offset_bottom = 64.0
-flat = true
+[node name="Label" type="Label" parent="Node2D" unique_id=598215828]
+offset_right = 648.0298
+offset_bottom = 212.97003
+theme_override_colors/font_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.44313726, 0.6627451, 0.96862745, 1)
+theme_override_constants/shadow_offset_x = 11
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 13
+theme_override_fonts/font = ExtResource("4_bv7n5")
+theme_override_font_sizes/font_size = 100
+text = "Levels"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Level" type="Control" parent="Level Choice" unique_id=1964127252]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=994522193]
+layer = -6
 
-[node name="PanelContainer" type="PanelContainer" parent="Level Choice/Level" unique_id=928738907]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 397.0
-offset_bottom = 160.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_b6rdv")
+[node name="Snow" type="TextureRect" parent="CanvasLayer" unique_id=1984813621]
+material = SubResource("ShaderMaterial_okqkh")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_trhe4")
+expand_mode = 1
+stretch_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Level Choice/Level/PanelContainer" unique_id=264382529]
-layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
+[node name="Background" type="TextureRect" parent="CanvasLayer" unique_id=1784938677]
+self_modulate = Color(1, 1, 1, 0.5411765)
+z_index = -6
+texture_repeat = 3
+material = SubResource("ShaderMaterial_ehng5")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_lh6rn")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Level Choice/Level/PanelContainer/MarginContainer" unique_id=699293878]
-layout_mode = 2
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1994900059]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("NoiseTexture2D_b6rdv")
 
-[node name="NameLabel" type="Label" parent="Level Choice/Level/PanelContainer/MarginContainer/VBoxContainer" unique_id=1091709670]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Level Name"
+[node name="Node2D2" type="Node2D" parent="." unique_id=1785419181]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Level Choice/Level/PanelContainer/MarginContainer/VBoxContainer" unique_id=434597146]
-layout_mode = 2
+[node name="Level Choice5" parent="Node2D2" unique_id=1103819960 instance=ExtResource("2_apu6u")]
+offset_left = 544.0
+offset_top = 192.0
+offset_right = 956.0
+offset_bottom = 380.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
 
-[node name="Snowflake1" type="TextureRect" parent="Level Choice/Level/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1541745602]
-layout_mode = 2
-texture = ExtResource("2_wevku")
+[node name="Level Choice12" parent="Node2D2" unique_id=1206397335 instance=ExtResource("2_apu6u")]
+offset_left = 864.0
+offset_top = 192.0
+offset_right = 1276.0
+offset_bottom = 380.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("10_851in")
 
-[node name="Snowflake2" type="TextureRect" parent="Level Choice/Level/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1187087163]
-layout_mode = 2
-texture = ExtResource("2_wevku")
+[node name="Level Choice13" parent="Node2D2" unique_id=1880984627 instance=ExtResource("2_apu6u")]
+offset_left = 544.0
+offset_top = 336.0
+offset_right = 956.0
+offset_bottom = 524.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("11_ehng5")
 
-[node name="Snowflake3" type="TextureRect" parent="Level Choice/Level/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=521930623]
-layout_mode = 2
-texture = ExtResource("2_wevku")
+[node name="Level Choice14" parent="Node2D2" unique_id=277448625 instance=ExtResource("2_apu6u")]
+offset_left = 864.0
+offset_top = 336.0
+offset_right = 1276.0
+offset_bottom = 524.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("12_p532j")
 
-[connection signal="pressed" from="Level Choice/Button" to="Level Choice" method="_on_button_pressed"]
+[node name="Level Choice15" parent="Node2D2" unique_id=1480597964 instance=ExtResource("2_apu6u")]
+offset_left = 224.0
+offset_top = 480.0
+offset_right = 636.0
+offset_bottom = 668.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("13_doruf")
+
+[node name="Level Choice16" parent="Node2D2" unique_id=1452966679 instance=ExtResource("2_apu6u")]
+offset_left = 864.0
+offset_top = 480.00003
+offset_right = 1276.0
+offset_bottom = 668.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("14_vebhf")
+
+[node name="Level Choice6" parent="Node2D2" unique_id=273128687 instance=ExtResource("2_apu6u")]
+offset_left = 224.0
+offset_top = 48.0
+offset_right = 636.0
+offset_bottom = 236.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("15_473rj")
+
+[node name="Level Choice7" parent="Node2D2" unique_id=812058223 instance=ExtResource("2_apu6u")]
+offset_left = 224.0
+offset_top = 191.99998
+offset_right = 636.0
+offset_bottom = 380.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="Level Choice10" parent="Node2D2" unique_id=605014833 instance=ExtResource("2_apu6u")]
+offset_left = 224.0
+offset_top = 336.0
+offset_right = 636.0
+offset_bottom = 524.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+level_scene = ExtResource("16_ehng5")
+
+[node name="Level Choice11" parent="Node2D2" unique_id=1846413438 instance=ExtResource("2_apu6u")]
+offset_left = 544.0
+offset_top = 480.00003
+offset_right = 956.0
+offset_bottom = 668.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="Level Choice8" parent="Node2D2" unique_id=855510499 instance=ExtResource("2_apu6u")]
+offset_left = 864.0
+offset_top = 48.0
+offset_right = 1276.0
+offset_bottom = 236.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="Level Choice9" parent="Node2D2" unique_id=1114733989 instance=ExtResource("2_apu6u")]
+offset_left = 544.0
+offset_top = 48.0
+offset_right = 956.0
+offset_bottom = 236.0
+size_flags_horizontal = 6
+size_flags_vertical = 6

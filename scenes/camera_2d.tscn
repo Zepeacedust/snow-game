@@ -12,3 +12,5 @@ wide_time = 1.0
 goal_time = 1.0
 goal_into_time = 1.0
 player_into_time = 1.0
+
+[node name="Node2D" type="Node2D" parent="." unique_id=122585005]

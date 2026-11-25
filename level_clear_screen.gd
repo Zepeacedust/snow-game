@@ -15,3 +15,13 @@ func update_clear_info(level_name : String, collectables : Array[Sprite2D], time
 			collectable_displays[i].self_modulate = Color(0.129, 0.098, 0.157, 1.0)
 	
 	$PanelContainer/MarginContainer/VBoxContainer/TimeLabel.text = "Time : " + str(time) + " s"
+
+
+func _on_retry_button_pressed() -> void:
+	SignalHub.reset_level.emit()
+	queue_free()
+
+
+func _on_levels_button_pressed() -> void:
+	SignalHub.level_select_screen.emit()
+	queue_free()

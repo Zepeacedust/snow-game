@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dhmq5ke7gnvwx"]
+[gd_scene format=3 uid="uid://dbec5tddqnpyr"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_vbj07"]
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://scripts/level.gd" id="1_vbj07"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_21sn4"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_b5irw"]
 [ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="4_ippat"]
@@ -185,18 +185,20 @@ shader_parameter/glitter_color = Color(0.85, 0.95, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("9_ex3kd")
-region = Rect2(69, 365, 62, 70)
+region = Rect2(569, 165, 62, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ly3hx"]
 atlas = ExtResource("9_ex3kd")
-region = Rect2(68, 165, 64, 70)
+region = Rect2(67, 265, 66, 70)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkb0e"]
 atlas = ExtResource("9_ex3kd")
-region = Rect2(569, 265, 62, 70)
+region = Rect2(669, 165, 62, 70)
 
-[node name="TestLevel" type="Node2D" unique_id=1669989023]
+[node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_vbj07")
+level_name = "Free Fall"
+collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
 material = SubResource("ShaderMaterial_1xymn")
