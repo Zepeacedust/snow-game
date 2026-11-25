@@ -49,3 +49,5 @@ func reset_self() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("restart"):
 		reset_self()
+	if event.is_action_pressed("ui_cancel"):
+		SignalHub.level_select_screen.emit()

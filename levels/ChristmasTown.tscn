@@ -199,7 +199,7 @@ region = Rect2(569, 265, 62, 70)
 
 [node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_wytxc")
-level_name = "Christmas"
+level_name = "The Town"
 collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
