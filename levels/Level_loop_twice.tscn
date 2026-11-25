@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cwqq34luprs2t"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_ntk7j"]
+[ext_resource type="Script" path="res://levels/level.gd" id="1_ntk7j"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_s3adc"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_5csv1"]
 [ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="4_v7v4i"]
@@ -214,7 +214,7 @@ snow_enabled = true
 
 [node name="Polygon2D" parent="Platforms" unique_id=864268895 instance=ExtResource("2_s3adc")]
 position = Vector2(-256, 800)
-polygon = PackedVector2Array(52, -674, 573.1252, -672.7163, 1296, 515, 2992, 1293, 3959, 1009, 4883, 1425, 5962, 938, 8183, 988, 7780, 3501, 1957, 3466, 456, 1329)
+polygon = PackedVector2Array(52, -674, 573.1252, -672.7163, 1296, 515, 2992, 1293, 3959, 1009, 4883, 1425, 5962, 938, 8183, 988, 8127, 1184, 9715.774, 1187.7308, 9952, 1056, 9962, 2382, 7780, 3501, 1957, 3466, 456, 1329)
 uv = PackedVector2Array(743.99994, 8, 832.00006, 152, 570.4386, 906.4701, 7.969567, 989.0524, 70.97986, 460.8987)
 snow_enabled = true
 
@@ -228,7 +228,7 @@ snow_enabled = true
 [node name="Polygon2D4" parent="Platforms" unique_id=773163945 instance=ExtResource("2_s3adc")]
 position = Vector2(9882, 1403)
 color = Color(0, 0.58431375, 0.63529414, 1)
-polygon = PackedVector2Array(-185, 371, 2745, 2482, -171, 1786)
+polygon = PackedVector2Array(-184, 404, 2745, 2482, -171, 1786)
 uv = PackedVector2Array(526.7771, 292.28296, 595.7082, 474.45804, 393.83853, 725.5642, 339.67834, 523.6945)
 snow_enabled = true
 
