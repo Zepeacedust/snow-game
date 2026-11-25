@@ -32,7 +32,11 @@ texture = ExtResource("2_h7fkj")
 metadata/_edit_group_ = true
 
 [node name="Camera2D" parent="." unique_id=198332219 node_paths=PackedStringArray("target") instance=ExtResource("3_mdvpl")]
+position = Vector2(569, 324)
+zoom = Vector2(0.1, 0.1)
 target = NodePath("../CharacterBody2D")
+camera_mode = 2
+wide_time = 3.0
 
 [node name="CanvasLayer" parent="." unique_id=994522193 instance=ExtResource("4_i2ls8")]
 

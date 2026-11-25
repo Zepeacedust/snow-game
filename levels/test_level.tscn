@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cnav3ac88eoxd"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_e7anx"]
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://scripts/level.gd" id="1_e7anx"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="1_o6mel"]
+[ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="2_4n8tn"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="2_e7anx"]
 [ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="3_ur00s"]
 [ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="4_wndkh"]
@@ -216,6 +217,24 @@ shader_parameter/crack_edge_warp_px = 39.0690018557775
 shader_parameter/crack_edge_boost = 57.3650027248375
 shader_parameter/crack_edge_light = 0.0
 shader_parameter/crack_darkness = 0.7130000338675
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wkb0e"]
+shader = ExtResource("2_4n8tn")
+shader_parameter/scale = 256.0
+shader_parameter/gap = 4.5
+shader_parameter/angle = 45.0
+shader_parameter/glass_tint = Color(0.62, 0.8, 1, 0.15)
+shader_parameter/stripe_color = Color(1, 1, 1, 0.08)
+shader_parameter/sun_color = Color(1, 1, 1, 0.59)
+shader_parameter/dash_cell = 6.0
+shader_parameter/dash_density = 0.75
+shader_parameter/dash_size = 0.2
+shader_parameter/dashes_enabled = true
+shader_parameter/border_enabled = true
+shader_parameter/border_size = 1.0
+shader_parameter/border_dash_cell = 15.0
+shader_parameter/border_dash_density = 0.5
+shader_parameter/border_dash_size = 1.0
+shader_parameter/border_dashes_enabled = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("8_wndkh")
@@ -229,11 +248,13 @@ region = Rect2(68, 165, 64, 70)
 atlas = ExtResource("8_wndkh")
 region = Rect2(569, 265, 62, 70)
 
-[node name="TestLevel" type="Node2D" unique_id=1669989023]
+[node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_e7anx")
+level_name = "Test Level"
+collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
-material = SubResource("ShaderMaterial_1xymn")
+material = SubResource("ShaderMaterial_wkb0e")
 
 [node name="Polygon2D" parent="Platforms" unique_id=336819310 instance=ExtResource("1_o6mel")]
 position = Vector2(-256, 800)
@@ -278,7 +299,7 @@ position = Vector2(5376, 576)
 modulate = Color(0, 0, 0, 1)
 position = Vector2(640, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("9_ly3hx")
+texture = ExtResource("9_ly3hx")git config pull.rebase false
 
 [node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
 modulate = Color(0, 0, 0, 1)

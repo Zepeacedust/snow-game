@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://jlc2jqp2d2ci" path="res://kenney_particle-pack/PNG (Transparent)/light_01.png" id="2_iuy8m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b6rdv"]
-size = Vector2(256, 320)
+size = Vector2(256, 304)
 
 [sub_resource type="Curve" id="Curve_0h8sl"]
 _limits = [0.0, 10.0, 0.0, 1.0]
@@ -28,14 +28,14 @@ offsets = PackedFloat32Array(0, 0.9)
 colors = PackedColorArray(0.9647059, 0.52156866, 0.627451, 1, 0.8117647, 0.89411765, 0.92941177, 1)
 metadata/_snap_enabled = true
 
-[node name="Goal" type="Node2D" unique_id=1904425614]
+[node name="Goal" type="Node2D" unique_id=1904425614 groups=["Goal"]]
 modulate = Color(1.0845727, 1.0845727, 1.0845727, 1)
 script = ExtResource("1_iuy8m")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1843434601]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=788694976]
-position = Vector2(0, -160)
+position = Vector2(0, -168)
 shape = SubResource("RectangleShape2D_b6rdv")
 
 [node name="CPUParticles2D2" type="CPUParticles2D" parent="." unique_id=1914266458]
