@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cd7pija4lesvq" path="res://Shaders/background noise/rift_noise.tres" id="7_rtb5x"]
 [ext_resource type="Texture2D" uid="uid://h6meig4770p8" path="res://Shaders/background noise/star_cell_noise.tres" id="8_vnx2f"]
 [ext_resource type="Texture2D" uid="uid://3fjnov116rct" path="res://Shaders/background noise/star_noise.tres" id="9_7pkux"]
+[ext_resource type="PackedScene" uid="uid://cd10kjmjm1ihx" path="res://levels/cavern.tscn" id="10_473rj"]
 [ext_resource type="PackedScene" uid="uid://baoo08hm5rahr" path="res://levels/ChristmasTown.tscn" id="10_851in"]
 [ext_resource type="PackedScene" uid="uid://dbec5tddqnpyr" path="res://levels/Free Fall.tscn" id="11_ehng5"]
 [ext_resource type="PackedScene" uid="uid://b34y00ftadgm" path="res://levels/Level_loop.tscn" id="12_p532j"]
@@ -17,6 +18,8 @@
 [ext_resource type="PackedScene" uid="uid://dwhedfesskae5" path="res://levels/Tunneling.tscn" id="15_473rj"]
 [ext_resource type="PackedScene" uid="uid://bmolvxrywukky" path="res://levels/CrystalMadness.tscn" id="16_ehng5"]
 [ext_resource type="PackedScene" uid="uid://djxqjs1xwwrly" path="res://levels/SimpleBridge.tscn" id="17_p532j"]
+[ext_resource type="PackedScene" uid="uid://cpjwmtosuax8m" path="res://levels/Tutorial_Heat_zone.tscn" id="18_w6pwf"]
+[ext_resource type="PackedScene" uid="uid://cdsni22ouulko" path="res://levels/Tutorial_Multi_Bridges.tscn" id="19_k1jds"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_okqkh"]
 shader = ExtResource("4_8qr5y")
@@ -232,12 +235,13 @@ offset_right = 956.0
 offset_bottom = 380.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
+level_scene = ExtResource("10_473rj")
 
 [node name="Level Choice12" parent="Node2D2" unique_id=1206397335 instance=ExtResource("2_apu6u")]
-offset_left = 864.0
-offset_top = 192.0
-offset_right = 1276.0
-offset_bottom = 380.0
+offset_left = 544.0
+offset_top = 480.0
+offset_right = 956.0
+offset_bottom = 668.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 level_scene = ExtResource("10_851in")
@@ -279,9 +283,9 @@ size_flags_vertical = 6
 level_scene = ExtResource("14_vebhf")
 
 [node name="Level Choice6" parent="Node2D2" unique_id=273128687 instance=ExtResource("2_apu6u")]
-offset_left = 224.0
+offset_left = 544.0
 offset_top = 48.0
-offset_right = 636.0
+offset_right = 956.0
 offset_bottom = 236.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
@@ -305,12 +309,13 @@ size_flags_vertical = 6
 level_scene = ExtResource("16_ehng5")
 
 [node name="Level Choice11" parent="Node2D2" unique_id=1846413438 instance=ExtResource("2_apu6u")]
-offset_left = 544.0
-offset_top = 480.00003
-offset_right = 956.0
-offset_bottom = 668.0
+offset_left = 864.0
+offset_top = 192.0
+offset_right = 1276.0
+offset_bottom = 380.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
+level_scene = ExtResource("18_w6pwf")
 
 [node name="Level Choice8" parent="Node2D2" unique_id=855510499 instance=ExtResource("2_apu6u")]
 offset_left = 864.0
@@ -319,11 +324,12 @@ offset_right = 1276.0
 offset_bottom = 236.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
+level_scene = ExtResource("19_k1jds")
 
 [node name="Level Choice9" parent="Node2D2" unique_id=1114733989 instance=ExtResource("2_apu6u")]
-offset_left = 544.0
+offset_left = 224.00002
 offset_top = 48.0
-offset_right = 956.0
+offset_right = 636.0
 offset_bottom = 236.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
