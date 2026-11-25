@@ -246,19 +246,19 @@ position = Vector2(5376, 576)
 
 [node name="Sprite2D" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1219358869]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(640, 40)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("9_ly3hx")
-
-[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(704, 40)
+position = Vector2(704, 32)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("9_ly3hx")
 
 [node name="Sprite2D3" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1237023390]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(576, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("9_ly3hx")
+
+[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1361472054]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(480, 39.999996)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("9_ly3hx")
 
