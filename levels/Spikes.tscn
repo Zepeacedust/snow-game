@@ -1,0 +1,264 @@
+[gd_scene format=3 uid="uid://xl02ykf3so2f"]
+
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_43xd1"]
+[ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="2_ejt31"]
+[ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="3_lhrup"]
+[ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="4_lsvf4"]
+[ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="5_5ho40"]
+[ext_resource type="PackedScene" uid="uid://bnhy4urh4ncg5" path="res://level objects/goal.tscn" id="6_hlah1"]
+[ext_resource type="Texture2D" uid="uid://du7lauir4ku3a" path="res://snowflakes.tres" id="7_8tfya"]
+[ext_resource type="PackedScene" uid="uid://ckf0m4a171j81" path="res://level objects/collectable.tscn" id="8_liigv"]
+[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="9_pwxds"]
+
+[sub_resource type="Shader" id="Shader_4n8tn"]
+code = "shader_type canvas_item;
+
+// Crack generation
+uniform float crack_depth : hint_range(0.0, 10.0) = 2.236;
+uniform float crack_scale : hint_range(1.0, 100.0) = 4.0;
+uniform float crack_zebra_scale : hint_range(0.0, 10.0) = 2.67;
+uniform float crack_zebra_amp : hint_range(0.0, 10.0) = 1.3;
+uniform float crack_profile : hint_range(0.0, 10.0) = 1.0;
+uniform float crack_slope : hint_range(0.0, 50.0) = 45.8;
+uniform float crack_width : hint_range(0.0, 1.0) = 0.001;
+
+const vec4 background_color = vec4(0.0, 0.0, 0.0, 0.0);
+const vec4 crack_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+// Glass effect
+uniform vec2 refraction_offset = vec2(25.0,25.0);
+uniform vec2 reflection_offset = vec2(1.0,1.0);
+uniform vec4 reflection_color : source_color = vec4(0.588,0.588,0.588,0.5);
+
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+
+
+vec2 hash(vec2 p) {
+    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+    return fract(sin(p) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(dot(hash(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
+                   dot(hash(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), f.x),
+               mix(dot(hash(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
+                   dot(hash(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), f.x), f.y);
+}
+
+vec3 voronoi(vec2 u) {
+    vec2 p = floor(u);
+    vec2 f = fract(u);
+    float res = 8.0;
+    vec2 b = vec2(0.0);
+    for (int j = -1; j <= 1; j++) {
+        for (int i = -1; i <= 1; i++) {
+            vec2 g = vec2(float(i), float(j));
+            vec2 o = hash(p + g);
+            vec2 r = g - f + o;
+            float d = dot(r, r);
+            if (d < res) {
+                res = d;
+                b = r;
+            }
+        }
+    }
+    return vec3(sqrt(res), b);
+}
+
+vec3 voronoiB(vec2 u) {
+    vec2 p = floor(u);
+    vec2 f = fract(u);
+    float res = 8.0;
+    vec2 C = vec2(0.0);
+    vec2 P = vec2(0.0);
+    for (int j = -1; j <= 1; j++) {
+        for (int i = -1; i <= 1; i++) {
+            vec2 g = vec2(float(i), float(j));
+            vec2 o = hash(p + g);
+            vec2 r = g - f + o;
+            float d = dot(r, r);
+            if (d < res) {
+                res = d;
+                C = g;
+                P = r;
+            }
+        }
+    }
+    res = 8.0;
+    for (int j = -2; j <= 2; j++) {
+        for (int i = -2; i <= 2; i++) {
+            vec2 g = C + vec2(float(i), float(j));
+            vec2 o = hash(p + g);
+            vec2 r = g - f + o;
+            if (dot(P - r, P - r) > 1e-5) {
+                res = min(res, 0.5 * dot((P + r), normalize(r - P)));
+            }
+        }
+    }
+    return vec3(res, P + f);
+}
+
+float fbm(vec2 n) {
+    float total = 0.0, amp = 1.0;
+    for (int i = 0; i < 7; i++) {
+        total += noise(n) * amp;
+        n += n;
+        amp *= 0.5;
+    }
+    return total;
+}
+
+vec4 generate_cracks(vec2 uv) {
+	vec2 U = uv * crack_scale;
+    vec2 I = floor(U / 2.0);
+    bool vert = mod(I.x + I.y, 2.0) == 0.0;
+    vec3 H0;
+    vec4 color = background_color;
+    for (float i = 0.0; i < crack_depth; i++) {
+        vec2 V = U;
+        vec2 D = vec2(crack_zebra_amp * fbm(U / crack_zebra_scale) * crack_zebra_scale);
+        vec3 H = voronoiB(V + D);
+        float d = H.x;
+        d = min(1.0, crack_slope * pow(max(0.0, d - crack_width), crack_profile));
+        color += vec4(1.0 - d) / exp2(i);
+        U *= 1.5;
+    }
+    color *= crack_color;
+	
+	return color;
+}
+
+
+void fragment() {	
+	COLOR =  generate_cracks(UV);
+	vec4 orig_color = COLOR;
+	vec4 adjacent_color = generate_cracks(UV + TEXTURE_PIXEL_SIZE * reflection_offset);
+	if (adjacent_color.a >= 1.0) {
+		COLOR = reflection_color;
+	} else {
+		COLOR = texture(SCREEN_TEXTURE, SCREEN_UV + COLOR.a*(SCREEN_PIXEL_SIZE * refraction_offset));
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1xymn"]
+shader = SubResource("Shader_4n8tn")
+shader_parameter/crack_depth = 10.0
+shader_parameter/crack_scale = 30.0000013775
+shader_parameter/crack_zebra_scale = 2.67
+shader_parameter/crack_zebra_amp = 1.3
+shader_parameter/crack_profile = 0.9170000435575
+shader_parameter/crack_slope = 50.0
+shader_parameter/crack_width = 0.0050000002375
+shader_parameter/refraction_offset = Vector2(40, 50)
+shader_parameter/reflection_offset = Vector2(30, -10)
+shader_parameter/reflection_color = Color(1, 1, 1, 0.5019608)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
+atlas = ExtResource("9_pwxds")
+region = Rect2(69, 365, 62, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ly3hx"]
+atlas = ExtResource("9_pwxds")
+region = Rect2(68, 165, 64, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wkb0e"]
+atlas = ExtResource("9_pwxds")
+region = Rect2(569, 265, 62, 70)
+
+[node name="TestLevel" type="Node2D" unique_id=1669989023]
+position = Vector2(3, 0)
+script = ExtResource("1_43xd1")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
+material = SubResource("ShaderMaterial_1xymn")
+
+[node name="Polygon2D" parent="Platforms" unique_id=336819310 instance=ExtResource("2_ejt31")]
+position = Vector2(-256, 800)
+color = Color(0.8117647, 0.89411765, 0.92941177, 1)
+uv = PackedVector2Array(743.99994, 8, 832.00006, 152, 570.4386, 906.4701, 7.969567, 989.0524, 70.97986, 460.8987)
+
+[node name="Polygon2D3" parent="Platforms" unique_id=841653545 instance=ExtResource("2_ejt31")]
+position = Vector2(22664.002, 5181)
+scale = Vector2(1.3097152, 0.4402985)
+color = Color(0.6666667, 0.73333335, 0.8039216, 1)
+polygon = PackedVector2Array(-212.57031, -665.458, 864, -672, 445.13477, 4540.0996)
+uv = PackedVector2Array(432.45532, 287.87436, 585.3268, 287.87436, 809.1743, 566.31885, 645.3834, 653.67395, 394.23746, 642.7545, 301.42264, 473.504)
+
+[node name="Polygon2D4" parent="Platforms" unique_id=773163945 instance=ExtResource("2_ejt31")]
+position = Vector2(12587, -4101)
+color = Color(0, 0.58431375, 0.63529414, 1)
+polygon = PackedVector2Array(640, 448, 1312, 1472, 832, 3840, 256, 1568)
+uv = PackedVector2Array(526.7771, 292.28296, 595.7082, 474.45804, 393.83853, 725.5642, 339.67834, 523.6945)
+
+[node name="Polygon2D5" parent="Platforms" unique_id=678713104 instance=ExtResource("2_ejt31")]
+position = Vector2(1988, -3467)
+color = Color(0.2627451, 0.47843137, 0.5647059, 1)
+polygon = PackedVector2Array(-3638, -12110, 24425, -11958, 24908, 4395, 19937.555, 4624.28, 19500, 6201, 19236.484, 4656.6187, 14589, 4871, 14318, 7971, 12278, -4196, 9680, -3136, 7421, 8039, 5855, -432, 4292, 350, 2622.8838, -2617.0996, 1039, 6586, -40.68506, 43.960938, -1179, 3297)
+uv = PackedVector2Array(678.9678, 41.337006, 696.80774, 393.4259, 219.83655, 878.61487, 420.38913, 350.62112)
+
+[node name="Polygon2D6" parent="Platforms" unique_id=426121044 instance=ExtResource("2_ejt31")]
+position = Vector2(4062, 6109)
+color = Color(0.2627451, 0.47843137, 0.5647059, 1)
+polygon = PackedVector2Array(2014, -5132, 5286.9736, 3311.5376, 7376, 3636, 8590, -3339, 10378, 781, 16872, -80, 16805, -1372, 21774, 299, 21899, 4512, -347, 4850, -3895, 1160, -66, 1897)
+uv = PackedVector2Array(678.9678, 41.337006, 696.80774, 393.4259, 219.83655, 878.61487, 420.38913, 350.62112)
+
+[node name="Polygon2D7" parent="Platforms" unique_id=2128313646 instance=ExtResource("2_ejt31")]
+position = Vector2(22553, -940)
+scale = Vector2(1.8786069, 1.8195155)
+color = Color(0, 0.58431375, 0.63529414, 1)
+polygon = PackedVector2Array(784, 1098, 1475, 1808.0619, 832, 3840, 470, 1874)
+uv = PackedVector2Array(526.7771, 292.28296, 595.7082, 474.45804, 393.83853, 725.5642, 339.67834, 523.6945)
+
+[node name="Background" parent="." unique_id=994522193 instance=ExtResource("3_lhrup")]
+
+[node name="Camera2D" parent="." unique_id=198332219 node_paths=PackedStringArray("target") instance=ExtResource("4_lsvf4")]
+target = NodePath("../CharacterBody2D")
+SCALE_FACTOR = 3.0
+
+[node name="CharacterBody2D" parent="." unique_id=487467837 instance=ExtResource("5_5ho40")]
+position = Vector2(96, 64)
+
+[node name="Goal" parent="." unique_id=1904425614 instance=ExtResource("6_hlah1")]
+position = Vector2(23102, 4880)
+
+[node name="Timer" type="Timer" parent="." unique_id=282463720]
+
+[node name="SnowflakeDisplay" type="CanvasLayer" parent="." unique_id=359266053]
+
+[node name="Sprite2D" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1219358869]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(640, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("7_8tfya")
+
+[node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(704, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("7_8tfya")
+
+[node name="Sprite2D3" type="Sprite2D" parent="SnowflakeDisplay" unique_id=1237023390]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(576, 40)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("7_8tfya")
+
+[node name="Collectable2" parent="." unique_id=676469921 node_paths=PackedStringArray("holder") instance=ExtResource("8_liigv")]
+position = Vector2(13392, -13)
+texture = SubResource("AtlasTexture_4n8tn")
+holder = NodePath("../SnowflakeDisplay/Sprite2D")
+
+[node name="Collectable" parent="." unique_id=169161764 node_paths=PackedStringArray("holder") instance=ExtResource("8_liigv")]
+position = Vector2(19200, 3765)
+texture = SubResource("AtlasTexture_ly3hx")
+holder = NodePath("../SnowflakeDisplay/Sprite2D2")
+
+[node name="Collectable3" parent="." unique_id=25041559 node_paths=PackedStringArray("holder") instance=ExtResource("8_liigv")]
+position = Vector2(6060, 323)
+texture = SubResource("AtlasTexture_wkb0e")
+holder = NodePath("../SnowflakeDisplay/Sprite2D3")
