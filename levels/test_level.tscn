@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cnav3ac88eoxd"]
 
-[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://levels/level.gd" id="1_e7anx"]
+[ext_resource type="Script" uid="uid://djq2qipyrgr6g" path="res://scripts/level.gd" id="1_e7anx"]
 [ext_resource type="PackedScene" uid="uid://cfn8aidci05vt" path="res://level objects/platform.tscn" id="1_o6mel"]
+[ext_resource type="Shader" uid="uid://we68tb5nk7" path="res://Shaders/IcePath.gdshader" id="2_4n8tn"]
 [ext_resource type="PackedScene" uid="uid://cspn34sa5rr4k" path="res://scenes/background.tscn" id="2_e7anx"]
 [ext_resource type="PackedScene" uid="uid://onunoh2nkyhv" path="res://scenes/camera_2d.tscn" id="3_ur00s"]
 [ext_resource type="PackedScene" uid="uid://dhtom2qf7sluv" path="res://scenes/player.tscn" id="4_wndkh"]
@@ -10,153 +11,24 @@
 [ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="8_wndkh"]
 [ext_resource type="Texture2D" uid="uid://du7lauir4ku3a" path="res://snowflakes.tres" id="9_ly3hx"]
 
-[sub_resource type="Shader" id="Shader_4n8tn"]
-code = "shader_type canvas_item;
-
-// Crack generation
-uniform float crack_depth : hint_range(0.0, 10.0) = 2.236;
-uniform float crack_scale : hint_range(1.0, 100.0) = 4.0;
-uniform float crack_zebra_scale : hint_range(0.0, 10.0) = 2.67;
-uniform float crack_zebra_amp : hint_range(0.0, 10.0) = 1.3;
-uniform float crack_profile : hint_range(0.0, 10.0) = 1.0;
-uniform float crack_slope : hint_range(0.0, 50.0) = 45.8;
-uniform float crack_width : hint_range(0.0, 1.0) = 0.001;
-
-const vec4 background_color = vec4(0.0, 0.0, 0.0, 0.0);
-const vec4 crack_color = vec4(0.0, 0.0, 0.0, 1.0);
-
-// Glass effect
-uniform vec2 refraction_offset = vec2(25.0,25.0);
-uniform vec2 reflection_offset = vec2(1.0,1.0);
-uniform vec4 reflection_color : source_color = vec4(0.588,0.588,0.588,0.5);
-
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
-
-
-
-vec2 hash(vec2 p) {
-    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
-    return fract(sin(p) * 43758.5453123);
-}
-
-float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
-    return mix(mix(dot(hash(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
-                   dot(hash(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), f.x),
-               mix(dot(hash(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
-                   dot(hash(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), f.x), f.y);
-}
-
-vec3 voronoi(vec2 u) {
-    vec2 p = floor(u);
-    vec2 f = fract(u);
-    float res = 8.0;
-    vec2 b = vec2(0.0);
-    for (int j = -1; j <= 1; j++) {
-        for (int i = -1; i <= 1; i++) {
-            vec2 g = vec2(float(i), float(j));
-            vec2 o = hash(p + g);
-            vec2 r = g - f + o;
-            float d = dot(r, r);
-            if (d < res) {
-                res = d;
-                b = r;
-            }
-        }
-    }
-    return vec3(sqrt(res), b);
-}
-
-vec3 voronoiB(vec2 u) {
-    vec2 p = floor(u);
-    vec2 f = fract(u);
-    float res = 8.0;
-    vec2 C = vec2(0.0);
-    vec2 P = vec2(0.0);
-    for (int j = -1; j <= 1; j++) {
-        for (int i = -1; i <= 1; i++) {
-            vec2 g = vec2(float(i), float(j));
-            vec2 o = hash(p + g);
-            vec2 r = g - f + o;
-            float d = dot(r, r);
-            if (d < res) {
-                res = d;
-                C = g;
-                P = r;
-            }
-        }
-    }
-    res = 8.0;
-    for (int j = -2; j <= 2; j++) {
-        for (int i = -2; i <= 2; i++) {
-            vec2 g = C + vec2(float(i), float(j));
-            vec2 o = hash(p + g);
-            vec2 r = g - f + o;
-            if (dot(P - r, P - r) > 1e-5) {
-                res = min(res, 0.5 * dot((P + r), normalize(r - P)));
-            }
-        }
-    }
-    return vec3(res, P + f);
-}
-
-float fbm(vec2 n) {
-    float total = 0.0, amp = 1.0;
-    for (int i = 0; i < 7; i++) {
-        total += noise(n) * amp;
-        n += n;
-        amp *= 0.5;
-    }
-    return total;
-}
-
-vec4 generate_cracks(vec2 uv) {
-	vec2 U = uv * crack_scale;
-    vec2 I = floor(U / 2.0);
-    bool vert = mod(I.x + I.y, 2.0) == 0.0;
-    vec3 H0;
-    vec4 color = background_color;
-    for (float i = 0.0; i < crack_depth; i++) {
-        vec2 V = U;
-        vec2 D = vec2(crack_zebra_amp * fbm(U / crack_zebra_scale) * crack_zebra_scale);
-        vec3 H = voronoiB(V + D);
-        float d = H.x;
-        d = min(1.0, crack_slope * pow(max(0.0, d - crack_width), crack_profile));
-        color += vec4(1.0 - d) / exp2(i);
-        U *= 1.5;
-    }
-    color *= crack_color;
-	
-	return color;
-}
-
-
-void fragment() {	
-	COLOR =  generate_cracks(UV);
-	vec4 orig_color = COLOR;
-	vec4 adjacent_color = generate_cracks(UV + TEXTURE_PIXEL_SIZE * reflection_offset);
-	if (adjacent_color.a >= 1.0) {
-		COLOR = reflection_color;
-	} else {
-		COLOR = texture(SCREEN_TEXTURE, SCREEN_UV + COLOR.a*(SCREEN_PIXEL_SIZE * refraction_offset));
-	}
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1xymn"]
-shader = SubResource("Shader_4n8tn")
-shader_parameter/crack_depth = 10.0
-shader_parameter/crack_scale = 30.0000013775
-shader_parameter/crack_zebra_scale = 2.67
-shader_parameter/crack_zebra_amp = 1.3
-shader_parameter/crack_profile = 0.9170000435575
-shader_parameter/crack_slope = 50.0
-shader_parameter/crack_width = 0.0050000002375
-shader_parameter/refraction_offset = Vector2(40, 50)
-shader_parameter/reflection_offset = Vector2(30, -10)
-shader_parameter/reflection_color = Color(1, 1, 1, 0.5019608)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wkb0e"]
+shader = ExtResource("2_4n8tn")
+shader_parameter/scale = 256.0
+shader_parameter/gap = 4.5
+shader_parameter/angle = 45.0
+shader_parameter/glass_tint = Color(0.62, 0.8, 1, 0.15)
+shader_parameter/stripe_color = Color(1, 1, 1, 0.08)
+shader_parameter/sun_color = Color(1, 1, 1, 0.59)
+shader_parameter/dash_cell = 6.0
+shader_parameter/dash_density = 0.75
+shader_parameter/dash_size = 0.2
+shader_parameter/dashes_enabled = true
+shader_parameter/border_enabled = true
+shader_parameter/border_size = 1.0
+shader_parameter/border_dash_cell = 15.0
+shader_parameter/border_dash_density = 0.5
+shader_parameter/border_dash_size = 1.0
+shader_parameter/border_dashes_enabled = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("8_wndkh")
@@ -170,11 +42,13 @@ region = Rect2(68, 165, 64, 70)
 atlas = ExtResource("8_wndkh")
 region = Rect2(569, 265, 62, 70)
 
-[node name="TestLevel" type="Node2D" unique_id=1669989023]
+[node name="TestLevel" type="Node2D" unique_id=1669989023 node_paths=PackedStringArray("collectables")]
 script = ExtResource("1_e7anx")
+level_name = "Test Level"
+collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
-material = SubResource("ShaderMaterial_1xymn")
+material = SubResource("ShaderMaterial_wkb0e")
 
 [node name="Polygon2D" parent="Platforms" unique_id=336819310 instance=ExtResource("1_o6mel")]
 position = Vector2(-256, 800)
@@ -219,7 +93,7 @@ position = Vector2(5376, 576)
 modulate = Color(0, 0, 0, 1)
 position = Vector2(640, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("9_ly3hx")
+texture = ExtResource("9_ly3hx")git config pull.rebase false
 
 [node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
 modulate = Color(0, 0, 0, 1)

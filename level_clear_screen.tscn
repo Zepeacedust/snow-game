@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://dco88i5kmhe7t"]
+
+[ext_resource type="Theme" uid="uid://caue0i3fwmwd8" path="res://ui_theme.tres" id="1_2nyxq"]
+[ext_resource type="FontFile" uid="uid://befujplfmh24" path="res://Shaders/TrueType (.ttf)/Kaph-Italic.ttf" id="2_c30ex"]
+[ext_resource type="Script" uid="uid://ja8w4q4uufpa" path="res://level_clear_screen.gd" id="2_m3ydj"]
+[ext_resource type="Texture2D" uid="uid://1dc154we0kj2" path="res://snowflakes.png" id="2_nrkne"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m3ydj"]
+bg_color = Color(0.44705883, 0.09803922, 0.3529412, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.29803923, 0.0627451, 0.21176471, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+expand_margin_left = 26.0
+expand_margin_right = 26.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c30ex"]
+atlas = ExtResource("2_nrkne")
+region = Rect2(68, 165, 64, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3ydj"]
+atlas = ExtResource("2_nrkne")
+region = Rect2(269, 265, 62, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1gnjo"]
+atlas = ExtResource("2_nrkne")
+region = Rect2(569, 365, 62, 70)
+
+[node name="LevelClearScreen" type="Control" unique_id=523979117]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 432.0
+offset_top = 56.0
+offset_right = 432.0
+offset_bottom = 56.0
+theme = ExtResource("1_2nyxq")
+script = ExtResource("2_m3ydj")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=286117703]
+layout_mode = 0
+offset_right = 338.0
+offset_bottom = 450.0
+theme = ExtResource("1_2nyxq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_m3ydj")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1237084180]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_2nyxq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=2078992378]
+layout_mode = 2
+theme = ExtResource("1_2nyxq")
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1195916432]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme = ExtResource("1_2nyxq")
+theme_override_colors/font_color = Color(0.44313726, 0.6627451, 0.96862745, 1)
+theme_override_colors/font_shadow_color = Color(0.29803923, 0.0627451, 0.21176471, 1)
+theme_override_colors/font_outline_color = Color(0.41960785, 0.36078432, 0.64705884, 1)
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 7
+text = "Level Cleared!"
+
+[node name="NameLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1938789129]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme = ExtResource("1_2nyxq")
+theme_override_colors/font_color = Color(0.41960785, 0.36078432, 0.64705884, 1)
+theme_override_colors/font_shadow_color = Color(0.29803923, 0.0627451, 0.21176471, 1)
+theme_override_colors/font_outline_color = Color(0.44313726, 0.6627451, 0.96862745, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("2_c30ex")
+theme_override_font_sizes/font_size = 24
+text = "Level Name"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=854658972]
+layout_mode = 2
+size_flags_vertical = 2
+theme = ExtResource("1_2nyxq")
+
+[node name="Collectable1" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=224164935]
+layout_mode = 2
+size_flags_horizontal = 6
+theme = ExtResource("1_2nyxq")
+texture = SubResource("AtlasTexture_c30ex")
+
+[node name="Collectable2" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1966510945]
+layout_mode = 2
+size_flags_horizontal = 6
+theme = ExtResource("1_2nyxq")
+texture = SubResource("AtlasTexture_m3ydj")
+
+[node name="Collectable3" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1363740496]
+layout_mode = 2
+size_flags_horizontal = 6
+theme = ExtResource("1_2nyxq")
+texture = SubResource("AtlasTexture_1gnjo")
+
+[node name="TimeLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1783801300]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme = ExtResource("1_2nyxq")
+theme_override_colors/font_color = Color(0.41960785, 0.36078432, 0.64705884, 1)
+theme_override_colors/font_shadow_color = Color(0.29803923, 0.0627451, 0.21176471, 1)
+theme_override_colors/font_outline_color = Color(0.44313726, 0.6627451, 0.96862745, 1)
+theme_override_constants/outline_size = 3
+text = "Time : "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=616128326]
+layout_mode = 2
+size_flags_vertical = 6
+theme = ExtResource("1_2nyxq")
+
+[node name="RetryButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=109686620]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme = ExtResource("1_2nyxq")
+theme_override_font_sizes/font_size = 20
+text = "Retry"
+flat = true
+
+[node name="LevelsButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1740776323]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("1_2nyxq")
+theme_override_font_sizes/font_size = 20
+text = "Level Select"
+flat = true
