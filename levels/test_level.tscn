@@ -13,25 +13,37 @@
 [sub_resource type="Shader" id="Shader_4n8tn"]
 code = "shader_type canvas_item;
 
+// mipmaps are needed for textureLod (blur)
+uniform sampler2D screen_texture: hint_screen_texture, repeat_disable, filter_linear_mipmap;
+
+// Frosted glass
+uniform vec4 tint_color: source_color = vec4(0.5, 0.87, 0.945, 1.0);
+uniform float tint_amount: hint_range(0.0, 1.0) = 0.4;
+uniform float frost_scale: hint_range(1.0, 200.0) = 30.0;
+uniform float frost_refraction_px: hint_range(0.0, 30.0) = 4.0;
+uniform float frost_blur_lod: hint_range(0.0, 6.0) = 3.0;
+uniform float frost_whiteness: hint_range(0.0, 0.5) = 0.12;
+uniform float noise_amount: hint_range(0.0, 0.2) = 0.03;
+uniform float glitter_scale: hint_range(10.0, 400.0) = 140.0;
+uniform float glitter_density: hint_range(0.0, 1.0) = 0.35;
+uniform float glitter_intensity: hint_range(0.0, 4.0) = 1.5;
+uniform vec4 glitter_color: source_color = vec4(0.85, 0.95, 1.0, 1.0);
+
 // Crack generation
 uniform float crack_depth : hint_range(0.0, 10.0) = 2.236;
-uniform float crack_scale : hint_range(1.0, 100.0) = 4.0;
+uniform float crack_scale : hint_range(1.0, 10.0) = 4.0;
 uniform float crack_zebra_scale : hint_range(0.0, 10.0) = 2.67;
 uniform float crack_zebra_amp : hint_range(0.0, 10.0) = 1.3;
 uniform float crack_profile : hint_range(0.0, 10.0) = 1.0;
 uniform float crack_slope : hint_range(0.0, 50.0) = 45.8;
 uniform float crack_width : hint_range(0.0, 1.0) = 0.001;
 
-const vec4 background_color = vec4(0.0, 0.0, 0.0, 0.0);
-const vec4 crack_color = vec4(0.0, 0.0, 0.0, 1.0);
-
-// Glass effect
-uniform vec2 refraction_offset = vec2(25.0,25.0);
-uniform vec2 reflection_offset = vec2(1.0,1.0);
-uniform vec4 reflection_color : source_color = vec4(0.588,0.588,0.588,0.5);
-
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
-
+uniform float crack_clarity: hint_range(0.0, 1.0) = 0.9;
+uniform float crack_refraction_px: hint_range(0.0, 200.0) = 12.0;
+uniform float crack_edge_warp_px: hint_range(0.0, 200.0) = 60.0;
+uniform float crack_edge_boost: hint_range(0.0, 200.0) = 40.0;
+uniform float crack_edge_light: hint_range(0.0, 3.0) = 0.6;
+uniform float crack_darkness: hint_range(0.0, 1.0) = 0.08;
 
 
 vec2 hash(vec2 p) {
@@ -47,26 +59,6 @@ float noise(vec2 p) {
                    dot(hash(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), f.x),
                mix(dot(hash(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
                    dot(hash(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), f.x), f.y);
-}
-
-vec3 voronoi(vec2 u) {
-    vec2 p = floor(u);
-    vec2 f = fract(u);
-    float res = 8.0;
-    vec2 b = vec2(0.0);
-    for (int j = -1; j <= 1; j++) {
-        for (int i = -1; i <= 1; i++) {
-            vec2 g = vec2(float(i), float(j));
-            vec2 o = hash(p + g);
-            vec2 r = g - f + o;
-            float d = dot(r, r);
-            if (d < res) {
-                res = d;
-                b = r;
-            }
-        }
-    }
-    return vec3(sqrt(res), b);
 }
 
 vec3 voronoiB(vec2 u) {
@@ -104,7 +96,7 @@ vec3 voronoiB(vec2 u) {
 
 float fbm(vec2 n) {
     float total = 0.0, amp = 1.0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 5; i++) {
         total += noise(n) * amp;
         n += n;
         amp *= 0.5;
@@ -112,51 +104,118 @@ float fbm(vec2 n) {
     return total;
 }
 
-vec4 generate_cracks(vec2 uv) {
+float generate_cracks(vec2 uv) {
 	vec2 U = uv * crack_scale;
-    vec2 I = floor(U / 2.0);
-    bool vert = mod(I.x + I.y, 2.0) == 0.0;
-    vec3 H0;
-    vec4 color = background_color;
-    for (float i = 0.0; i < crack_depth; i++) {
-        vec2 V = U;
-        vec2 D = vec2(crack_zebra_amp * fbm(U / crack_zebra_scale) * crack_zebra_scale);
-        vec3 H = voronoiB(V + D);
-        float d = H.x;
-        d = min(1.0, crack_slope * pow(max(0.0, d - crack_width), crack_profile));
-        color += vec4(1.0 - d) / exp2(i);
-        U *= 1.5;
-    }
-    color *= crack_color;
-	
-	return color;
-}
-
-
-void fragment() {	
-	COLOR =  generate_cracks(UV);
-	vec4 orig_color = COLOR;
-	vec4 adjacent_color = generate_cracks(UV + TEXTURE_PIXEL_SIZE * reflection_offset);
-	if (adjacent_color.a >= 1.0) {
-		COLOR = reflection_color;
-	} else {
-		COLOR = texture(SCREEN_TEXTURE, SCREEN_UV + COLOR.a*(SCREEN_PIXEL_SIZE * refraction_offset));
+	float crack = 0.0;
+	for (float i = 0.0; i < crack_depth; i++) {
+		vec2 D = vec2(crack_zebra_amp * fbm(U / crack_zebra_scale) * crack_zebra_scale);
+		float d = voronoiB(U + D).x;
+		d = min(1.0, crack_slope * pow(max(0.0, d - crack_width), crack_profile));
+		crack += (1.0 - d) / exp2(i);
+		// The result is clamped to 1, so further octaves can't change it
+		if (crack >= 1.0) {
+			break;
+		}
+		U *= 1.5;
 	}
+	return clamp(crack, 0.0, 1.0);
 }
-"
+
+
+// Twinkling sparkles on a jittered grid
+float glitter(vec2 uv, vec2 cam) {
+	vec2 g = uv * glitter_scale;
+	vec2 id = floor(g);
+	vec2 h2 = hash(id + vec2(7.7, 3.1));
+	if (h2.x < 1.0 - glitter_density) {
+		return 0.0;
+	}
+	vec2 h = hash(id);
+	vec2 center = 0.25 + 0.5 * h;
+	float dist = length(fract(g) - center);
+	float dot_mask = smoothstep(0.22, 0.0, dist);
+	float phase = dot(cam, h * 2.0 - 1.0) * 0.02 + h2.y * 6.2831;
+	float twinkle = pow(max(0.0, sin(phase)), 8.0);
+	return dot_mask * twinkle;
+}
+
+varying vec2 camera_offset;
+
+void vertex() {
+	// Camera translation in pixels, so glitter reacts to camera movement
+	camera_offset = CANVAS_MATRIX[3].xy;
+}
+
+void fragment() {
+	float crack = generate_cracks(UV);
+	// Slope of the crack
+	vec2 crack_grad = vec2(dFdx(crack), dFdy(crack));
+
+	// Whole glass frosted and clear cracks
+	float frost = 1.0 - crack * crack_clarity;
+
+	// Procedural frost warp
+	vec2 frost_uv = UV * frost_scale;
+	vec2 frost_warp = vec2(noise(frost_uv), noise(frost_uv + vec2(17.3, 91.7)));
+
+	// Refract the backdrop, frost scatters while cracks bend
+	float edge = length(crack_grad);
+	vec2 edge_dir = crack_grad / (edge + 1e-5);
+	float edge_mask = clamp(edge * crack_edge_boost, 0.0, 1.0);
+	vec2 offset_px = frost_warp * frost_refraction_px * frost
+		+ crack_grad * crack_refraction_px
+		+ edge_dir * edge_mask * crack_edge_warp_px;
+	vec2 uv = SCREEN_UV + offset_px * SCREEN_PIXEL_SIZE;
+
+	// Blur the backdrop based on frost amount
+	vec3 screen = textureLod(screen_texture, uv, frost_blur_lod * frost).rgb;
+
+	// Tint and whiten our image
+	screen = mix(screen, tint_color.rgb, tint_amount * frost);
+	screen += frost_whiteness * frost;
+
+	// Glittering sparkles in the frost, brighter along crack edges
+	float sparkle = glitter(UV, camera_offset) + 0.5 * glitter(UV * 1.7 + vec2(13.1, 5.3), camera_offset * 1.3);
+	screen += glitter_color.rgb * sparkle * glitter_intensity * (frost + edge_mask);
+
+	// Get a random-ish value for some speckle noise
+	float noise = fract(sin(dot(UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+	// Apply speckle noise based on amount and frost
+	screen += noise * noise_amount * frost;
+
+	// Crack edge lighting and darkening giving some depth
+	screen += crack_edge_light * length(crack_grad);
+	screen *= 1.0 - crack_darkness * crack;
+
+	COLOR = vec4(screen, 1.0);
+}"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1xymn"]
 shader = SubResource("Shader_4n8tn")
-shader_parameter/crack_depth = 10.0
-shader_parameter/crack_scale = 30.0000013775
-shader_parameter/crack_zebra_scale = 2.67
-shader_parameter/crack_zebra_amp = 1.3
-shader_parameter/crack_profile = 0.9170000435575
-shader_parameter/crack_slope = 50.0
+shader_parameter/tint_color = Color(0.5, 0.87, 0.945, 1)
+shader_parameter/tint_amount = 0.0
+shader_parameter/frost_scale = 26.4530012090175
+shader_parameter/frost_refraction_px = 30.0
+shader_parameter/frost_blur_lod = 4.48800021318
+shader_parameter/frost_whiteness = 0.0230000010925
+shader_parameter/noise_amount = 0.046000002185
+shader_parameter/glitter_scale = 140.0
+shader_parameter/glitter_density = 0.35
+shader_parameter/glitter_intensity = 1.5
+shader_parameter/glitter_color = Color(0.85, 0.95, 1, 1)
+shader_parameter/crack_depth = 2.236
+shader_parameter/crack_scale = 1.6630000314925
+shader_parameter/crack_zebra_scale = 2.5150001194625
+shader_parameter/crack_zebra_amp = 0.56400002679
+shader_parameter/crack_profile = 0.2250000106875
+shader_parameter/crack_slope = 2.086000099085
 shader_parameter/crack_width = 0.0050000002375
-shader_parameter/refraction_offset = Vector2(40, 50)
-shader_parameter/reflection_offset = Vector2(30, -10)
-shader_parameter/reflection_color = Color(1, 1, 1, 0.5019608)
+shader_parameter/crack_clarity = 1.0
+shader_parameter/crack_refraction_px = 120.0
+shader_parameter/crack_edge_warp_px = 39.0690018557775
+shader_parameter/crack_edge_boost = 57.3650027248375
+shader_parameter/crack_edge_light = 0.0
+shader_parameter/crack_darkness = 0.7130000338675
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4n8tn"]
 atlas = ExtResource("8_wndkh")
