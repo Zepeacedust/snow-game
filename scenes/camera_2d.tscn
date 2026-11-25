@@ -8,6 +8,7 @@ texture_repeat = 2
 script = ExtResource("1_u0e42")
 SPEED = 5.0
 MINIMUM_ZOOM = 3
+camera_mode = 2
 wide_time = 1.0
 goal_time = 1.0
 goal_into_time = 1.0
