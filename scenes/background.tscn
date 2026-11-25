@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://cd7pija4lesvq" path="res://Shaders/background noise/rift_noise.tres" id="4_vvxqx"]
 [ext_resource type="Texture2D" uid="uid://h6meig4770p8" path="res://Shaders/background noise/star_cell_noise.tres" id="5_cdpnt"]
 [ext_resource type="Texture2D" uid="uid://3fjnov116rct" path="res://Shaders/background noise/star_noise.tres" id="6_8u6ia"]
+[ext_resource type="Texture2D" uid="uid://h6meig4770p8" path="res://Shaders/background noise/star_cell_noise.tres" id="2_jougr"]
+[ext_resource type="Texture2D" uid="uid://3fjnov116rct" path="res://Shaders/background noise/star_noise.tres" id="3_cbsqf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_okqkh"]
 shader = ExtResource("1_oabld")
@@ -132,21 +134,52 @@ void fragment() {
 	cloud = mix(texture(color_ramp, vec2(cloud.r, 0)).rgb, vec3(1.), smoothstep(.5,1., star));
 	
 	COLOR.rgb = cloud.rgb;
-}
-"
+}"
 
-[sub_resource type="Gradient" id="Gradient_t3sok"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.22222222, 0.33333334, 0.5555556, 0.7777778, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.20392157, 0.22745098, 0.23529412, 1, 0.35686275, 0.44313726, 0.5019608, 1, 0.40392157, 0.52156866, 0.62352943, 1, 0.6666667, 0.73333335, 0.8039216, 1, 0.8980392, 0.8862745, 0.8666667, 1)
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_trhe4"]
+noise_type = 2
+seed = -10
+frequency = 0.0057
+fractal_type = 2
+fractal_octaves = 2
+cellular_distance_function = 3
+cellular_return_type = 3
+domain_warp_enabled = true
+domain_warp_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bkp1e"]
+noise = SubResource("FastNoiseLite_trhe4")
+
+[sub_resource type="Gradient" id="Gradient_wisxt"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.25, 0.5, 1)
+colors = PackedColorArray(0.06666667, 0, 0.10980392, 1, 0.16078432, 0, 0.14509805, 1, 0.20784314, 0.003921569, 0.17254902, 1, 0.30980393, 0.003921569, 0.2784314, 1)
 metadata/_snap_enabled = true
-metadata/_snap_count = 9
+metadata/_snap_count = 8
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2n73o"]
-gradient = SubResource("Gradient_t3sok")
-fill_from = Vector2(0.2, 0.1)
-fill_to = Vector2(0.90000004, 0.3)
-metadata/_snap_enabled = true
+gradient = SubResource("Gradient_wisxt")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mdvpl"]
+frequency = 0.0001
+fractal_octaves = 10
+cellular_distance_function = 2
+cellular_return_type = 5
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y0upk"]
+noise = SubResource("FastNoiseLite_mdvpl")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xa8sc"]
+noise_type = 2
+frequency = 0.0019
+fractal_type = 3
+cellular_distance_function = 3
+cellular_return_type = 6
+domain_warp_enabled = true
+domain_warp_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jougr"]
+noise = SubResource("FastNoiseLite_xa8sc")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t3sok"]
 shader = SubResource("Shader_t3sok")
@@ -165,6 +198,8 @@ shader_parameter/cloud_speed = 0.01
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lh6rn"]
 noise = SubResource("FastNoiseLite_t3sok")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b6rdv"]
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=994522193]
 layer = -6
@@ -191,3 +226,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("NoiseTexture2D_lh6rn")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1994900059]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("NoiseTexture2D_b6rdv")
