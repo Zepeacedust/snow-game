@@ -203,7 +203,7 @@ level_name = "Test Level"
 collectables = [NodePath("Collectable2"), NodePath("Collectable"), NodePath("Collectable3")]
 
 [node name="Platforms" type="Node2D" parent="." unique_id=1907917136]
-material = SubResource("ShaderMaterial_wkb0e")
+material = SubResource("ShaderMaterial_1xymn")
 
 [node name="Polygon2D" parent="Platforms" unique_id=336819310 instance=ExtResource("1_o6mel")]
 position = Vector2(-256, 800)
@@ -248,7 +248,7 @@ position = Vector2(5376, 576)
 modulate = Color(0, 0, 0, 1)
 position = Vector2(640, 40)
 scale = Vector2(0.7, 0.7)
-texture = ExtResource("9_ly3hx")git config pull.rebase false
+texture = ExtResource("9_ly3hx")
 
 [node name="Sprite2D2" type="Sprite2D" parent="SnowflakeDisplay" unique_id=704026076]
 modulate = Color(0, 0, 0, 1)
